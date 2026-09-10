@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FrameCraft - Personalized Frames & Gifts</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .product-card:hover { transform: translateY(-4px); transition: all 0.3s ease; }
+        /* Custom Scrollbar for Cart Drawer */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
@@ -17,12 +20,14 @@
     <!-- NAVIGATION BAR -->
     <header class="sticky top-0 z-40 bg-slate-900 text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            
             <!-- SECRET ADMIN TRIGGER: Click this logo 5 times -->
-            <div class="flex items-center space-x-2 cursor-pointer" onclick="triggerAdmin()">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="triggerAdmin()" title="Secret Admin Trigger">
                 <i class="fa-solid fa-gift text-amber-400 text-2xl"></i>
                 <span class="text-2xl font-extrabold tracking-wide text-white">Frame<span class="text-amber-400">Craft</span></span>
             </div>
             
+            <!-- Cart Button -->
             <button onclick="toggleCartModal()" class="relative bg-amber-500 hover:bg-amber-600 text-slate-900 px-4 py-2 rounded-lg font-bold flex items-center space-x-2 transition">
                 <i class="fa-solid fa-cart-shopping text-lg"></i>
                 <span class="hidden sm:inline">Cart</span>
@@ -31,24 +36,30 @@
         </div>
     </header>
 
+    <!-- MAIN CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 py-6">
+        
         <!-- BANNER -->
         <div class="bg-gradient-to-r from-slate-900 to-indigo-900 text-white rounded-2xl p-6 sm:p-10 mb-8 shadow-lg relative overflow-hidden">
             <div class="relative z-10 max-w-xl">
                 <span class="bg-amber-400 text-slate-900 text-xs font-black uppercase px-2.5 py-1 rounded">Customized Gifts</span>
                 <h1 class="text-3xl sm:text-5xl font-extrabold mt-2 leading-tight">Turn Memories Into Forever Frames</h1>
+                <p class="text-gray-300 text-sm sm:text-base mt-2">Order premium customized photo frames and magic mugs directly via WhatsApp.</p>
             </div>
         </div>
 
         <!-- CATEGORIES FILTER -->
-        <div class="flex items-center space-x-2 overflow-x-auto pb-4 mb-6 no-scrollbar" id="category-container">
-            <button onclick="filterCategory('All')" class="bg-amber-500 text-slate-900 px-4 py-2 rounded-full text-sm font-bold shadow-sm">All Items</button>
-            <button onclick="filterCategory('Wooden Frames')" class="bg-white hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border">Wooden Frames</button>
-            <button onclick="filterCategory('Magic Mugs')" class="bg-white hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border">Magic Mugs</button>
+        <div class="flex items-center space-x-2 overflow-x-auto pb-4 mb-6 no-scrollbar">
+            <button onclick="filterCategory('All')" class="category-btn bg-amber-500 text-slate-900 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap shadow-sm">All Items</button>
+            <button onclick="filterCategory('Wooden Frames')" class="category-btn bg-white hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border whitespace-nowrap">Wooden Frames</button>
+            <button onclick="filterCategory('Acrylic Frames')" class="category-btn bg-white hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border whitespace-nowrap">Acrylic Frames</button>
+            <button onclick="filterCategory('Magic Mugs')" class="category-btn bg-white hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border whitespace-nowrap">Magic Mugs</button>
         </div>
 
-        <!-- PRODUCT GRID -->
-        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        <!-- PRODUCT GRID (AMAZON STYLE) -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Dynamic JavaScript Render -->
+        </div>
     </main>
 
     <!-- SECRET ADMIN PANEL MODAL -->
@@ -101,60 +112,136 @@
         </div>
     </div>
 
-    <!-- CART MODAL (Same as before) -->
+    <!-- CART & CHECKOUT MODAL -->
     <div id="cart-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex justify-end">
-        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col justify-between">
+        <div class="bg-white w-full max-w-lg h-full shadow-2xl flex flex-col justify-between overflow-hidden">
+            
+            <!-- Modal Header -->
             <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
-                <h2 class="text-lg font-bold">Your Bag</h2>
+                <h2 class="text-lg font-bold"><i class="fa-solid fa-bag-shopping text-amber-400 mr-2"></i> Your Shopping Bag</h2>
                 <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
             </div>
-            <div class="p-4 overflow-y-auto flex-1 space-y-4" id="cart-items-container"></div>
-            <div class="p-4 border-t bg-gray-50">
-                <div class="flex justify-between font-bold text-gray-800 mb-2">
-                    <span>Total:</span> <span id="cart-total" class="text-amber-600">₹0</span>
+
+            <!-- Cart Items Container -->
+            <div class="p-4 overflow-y-auto flex-1 space-y-4" id="cart-items-container">
+                <!-- Cart items load here dynamically -->
+            </div>
+
+            <!-- Checkout Form & Summary -->
+            <div class="p-4 border-t bg-gray-50 space-y-3">
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between font-bold text-gray-800 text-base">
+                        <span>Total Amount:</span>
+                        <span id="cart-total" class="text-amber-600">₹0</span>
+                    </div>
                 </div>
-                <button onclick="placeWhatsAppOrder()" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-lg flex items-center justify-center space-x-2">
-                    <i class="fa-brands fa-whatsapp text-xl"></i><span>Order via WhatsApp</span>
-                </button>
+
+                <!-- Customer Details Form -->
+                <form id="checkout-form" onsubmit="handleWhatsAppOrder(event)" class="space-y-2">
+                    <input type="text" id="cust-name" placeholder="Full Name *" required class="w-full text-xs p-2.5 border rounded focus:ring-2 focus:ring-amber-400 outline-none">
+                    <input type="tel" id="cust-phone" placeholder="WhatsApp Phone Number *" required class="w-full text-xs p-2.5 border rounded focus:ring-2 focus:ring-amber-400 outline-none">
+                    <textarea id="cust-address" placeholder="Complete Delivery Address *" rows="2" required class="w-full text-xs p-2.5 border rounded focus:ring-2 focus:ring-amber-400 outline-none"></textarea>
+                    <textarea id="cust-custom-text" placeholder="Customization details (e.g. Text/Name to print on frame)" rows="2" class="w-full text-xs p-2.5 border rounded focus:ring-2 focus:ring-amber-400 outline-none bg-amber-50"></textarea>
+
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg flex items-center justify-center space-x-2 shadow-md transition">
+                        <i class="fa-brands fa-whatsapp text-xl"></i>
+                        <span>Place Order via WhatsApp</span>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 
+    <!-- JAVASCRIPT ENGINE -->
     <script>
-        // --- CONFIGURATION ---
-        const MY_WHATSAPP_NUMBER = "9906764541"; 
-        const ADMIN_PASSWORD = "owner"; // Change this password!
-        const IMGBB_API_KEY = "1e327a3c3d5e278f2cb6ed311e92d6e3"; // Get free key from api.imgbb.com
+        // CONFIGURATION
+        // Note: Added '91' (Country Code) in front of your number so the WhatsApp link works globally.
+        const MY_WHATSAPP_NUMBER = "919906764541"; 
+        const ADMIN_PASSWORD = "owner"; 
+        const IMGBB_API_KEY = "1e327a3c3d5e278f2cb6ed311e92d6e3"; // Free auto-upload key
 
-        // --- DATA ENGINE ---
-        // Load products from LocalStorage, or load defaults if empty
+        // PRODUCT CATALOG DATA (Default items if database is empty)
         const defaultProducts = [
-            { id: 101, title: "Personalized Wooden Frame", category: "Wooden Frames", description: "Teak wood finish.", sizes: [{ label: "8x10 Inch", price: 399 }], image: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=500" },
-            { id: 102, title: "Custom Magic Mug", category: "Magic Mugs", description: "Black mug reveals photo.", sizes: [{ label: "325ml", price: 299 }], image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500" }
+            {
+                id: 101,
+                title: "Personalized Wooden Frame",
+                category: "Wooden Frames",
+                description: "High quality teak wood finish photo frame with matte print.",
+                sizes: [
+                    { label: "8x10 Inch", price: 399 },
+                    { label: "12x18 Inch", price: 599 }
+                ],
+                image: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=500&q=80"
+            },
+            {
+                id: 102,
+                title: "Glossy Acrylic Photo Frame",
+                category: "Acrylic Frames",
+                description: "Modern frameless 3mm thick glossy acrylic glass print.",
+                sizes: [
+                    { label: "8x12 Inch", price: 499 },
+                    { label: "12x18 Inch", price: 799 }
+                ],
+                image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&q=80"
+            },
+            {
+                id: 103,
+                title: "Custom Magic Coffee Mug",
+                category: "Magic Mugs",
+                description: "Black mug reveals photo when hot liquid is poured into it.",
+                sizes: [
+                    { label: "Standard 325ml", price: 299 }
+                ],
+                image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80"
+            },
+            {
+                id: 104,
+                title: "3D LED Photo Frame",
+                category: "Wooden Frames",
+                description: "Illuminated acrylic board with wooden LED light base.",
+                sizes: [
+                    { label: "Standard Size", price: 699 }
+                ],
+                image: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=500&q=80"
+            }
         ];
 
+        // Load products from Database (Local Storage) or use default
         let products = JSON.parse(localStorage.getItem('framecraft_db')) || defaultProducts;
         let cart = [];
 
-        // --- FRONTEND ENGINE ---
-        function renderProducts(items) {
+        // RENDER PRODUCTS TO DOM
+        function renderProducts(itemsToRender) {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
-            items.forEach(prod => {
+
+            itemsToRender.forEach(prod => {
+                const sizeOptions = prod.sizes.map((s, idx) => 
+                    `<option value="${idx}">${s.label} - ₹${s.price}</option>`
+                ).join('');
+
                 grid.innerHTML += `
-                    <div class="bg-white rounded-xl shadow border border-gray-100 flex flex-col justify-between">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden product-card flex flex-col justify-between">
                         <div>
-                            <img src="${prod.image}" class="w-full h-48 object-cover rounded-t-xl">
+                            <img src="${prod.image}" alt="${prod.title}" class="w-full h-48 object-cover">
                             <div class="p-4">
                                 <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">${prod.category}</span>
                                 <h3 class="font-bold text-gray-800 text-base mt-1">${prod.title}</h3>
                                 <p class="text-gray-500 text-xs mt-1 line-clamp-2">${prod.description}</p>
-                                <p class="font-bold text-slate-900 mt-2">₹${prod.sizes[0].price} <span class="text-xs font-normal text-gray-500">(${prod.sizes[0].label})</span></p>
+                                
+                                <div class="mt-3">
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1">Select Size:</label>
+                                    <select id="size-select-${prod.id}" class="w-full text-xs p-2 border rounded bg-gray-50 focus:outline-none">
+                                        ${sizeOptions}
+                                    </select>
+                                </div>
                             </div>
                         </div>
+
                         <div class="p-4 pt-0">
-                            <button onclick="addToCart(${prod.id})" class="w-full bg-slate-900 text-amber-400 font-bold py-2 rounded-lg text-sm flex justify-center items-center gap-2">
-                                <i class="fa-solid fa-plus"></i> Add to Cart
+                            <button onclick="addToCart(${prod.id})" class="w-full mt-2 bg-slate-900 hover:bg-slate-800 text-amber-400 font-bold py-2 px-4 rounded-lg text-xs flex items-center justify-center space-x-1 transition">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add to Cart</span>
                             </button>
                         </div>
                     </div>
@@ -162,48 +249,145 @@
             });
         }
 
-        function filterCategory(cat) {
-            renderProducts(cat === 'All' ? products : products.filter(p => p.category === cat));
+        // CATEGORY FILTER LOGIC
+        function filterCategory(category) {
+            if (category === 'All') {
+                renderProducts(products);
+            } else {
+                const filtered = products.filter(p => p.category === category);
+                renderProducts(filtered);
+            }
         }
 
-        // --- CART ENGINE ---
-        function addToCart(id) {
-            const prod = products.find(p => p.id === id);
-            cart.push({ title: prod.title, size: prod.sizes[0].label, price: parseInt(prod.sizes[0].price) });
+        // ADD TO CART SYSTEM
+        function addToCart(productId) {
+            const prod = products.find(p => p.id === productId);
+            const sizeSelect = document.getElementById(`size-select-${productId}`);
+            const selectedSizeIdx = sizeSelect.value;
+            const selectedSizeObj = prod.sizes[selectedSizeIdx];
+
+            const cartItemIndex = cart.findIndex(ci => ci.id === productId && ci.size === selectedSizeObj.label);
+
+            if (cartItemIndex > -1) {
+                cart[cartItemIndex].quantity += 1;
+            } else {
+                cart.push({
+                    id: prod.id,
+                    title: prod.title,
+                    size: selectedSizeObj.label,
+                    price: selectedSizeObj.price,
+                    quantity: 1
+                });
+            }
+
             updateCartUI();
-            toggleCartModal(true);
+            toggleCartModal(true); // Open Cart automatically
         }
 
+        // REMOVE FROM CART
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        // UPDATE CART UI & BADGES
         function updateCartUI() {
             const container = document.getElementById('cart-items-container');
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+
             container.innerHTML = '';
             let total = 0;
-            cart.forEach((item, i) => {
-                total += item.price;
-                container.innerHTML += `
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded border text-sm">
-                        <div><p class="font-bold">${item.title}</p><p class="text-amber-600">₹${item.price}</p></div>
-                        <button onclick="cart.splice(${i},1); updateCartUI();" class="text-red-500"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
-            });
-            document.getElementById('cart-count').innerText = cart.length;
-            document.getElementById('cart-total').innerText = `₹${total}`;
+            let totalItems = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-400 py-10 text-sm">Your cart is empty.</p>`;
+            } else {
+                cart.forEach((item, index) => {
+                    total += item.price * item.quantity;
+                    totalItems += item.quantity;
+
+                    container.innerHTML += `
+                        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border text-xs">
+                            <div>
+                                <h4 class="font-bold text-gray-800">${item.title}</h4>
+                                <p class="text-gray-500">Size: ${item.size}</p>
+                                <p class="font-semibold text-amber-600 mt-1">₹${item.price} x ${item.quantity}</p>
+                            </div>
+                            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-sm p-1">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+
+            cartCount.innerText = totalItems;
+            cartTotal.innerText = `₹${total}`;
         }
 
-        function toggleCartModal(show = false) {
+        // MODAL TOGGLE
+        function toggleCartModal(openForce = false) {
             const modal = document.getElementById('cart-modal');
-            show ? modal.classList.remove('hidden') : modal.classList.toggle('hidden');
+            if (openForce) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.toggle('hidden');
+            }
         }
 
-        function placeWhatsAppOrder() {
-            if(cart.length === 0) return alert("Cart is empty!");
-            let itemsText = cart.map((c, i) => `${i+1}. ${c.title} - ₹${c.price}`).join('\n');
-            let total = cart.reduce((sum, item) => sum + item.price, 0);
-            let msg = `🛒 *NEW ORDER*\n\n*Items:*\n${itemsText}\n\n*Total:* ₹${total}\n\n_I will provide my details now!_`;
-            window.open(`https://wa.me/${MY_WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+        // WHATSAPP ORDER AUTOMATION ENGINE
+        function handleWhatsAppOrder(e) {
+            e.preventDefault();
+
+            if (cart.length === 0) {
+                alert("Your cart is empty! Please add products before placing an order.");
+                return;
+            }
+
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const address = document.getElementById('cust-address').value;
+            const customText = document.getElementById('cust-custom-text').value || "None";
+
+            const orderId = Math.floor(100 + Math.random() * 900); // Dynamic Order #
+
+            let itemsFormatted = "";
+            let grandTotal = 0;
+
+            cart.forEach((item, idx) => {
+                const subtotal = item.price * item.quantity;
+                grandTotal += subtotal;
+                itemsFormatted += `${idx + 1}. ${item.title} (Size: ${item.size}) - ₹${item.price}\n`;
+            });
+
+            // STRUCTURED MESSAGE FORMAT
+            const message = `🛒 *NEW ORDER #${orderId}*
+
+👤 *Customer Details:*
+- *Name:* ${name}
+- *Phone:* ${phone}
+- *Address:* ${address}
+
+📦 *Items Ordered:*
+${itemsFormatted}
+📝 *Customization Details:*
+"${customText}"
+
+💰 *Total Amount:* ₹${grandTotal}
+
+------------------------------
+_Please let me know where to send my high-resolution photos for printing!_`;
+
+            // URL Encode for WhatsApp
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappURL = `https://wa.me/${MY_WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+            // Redirect to WhatsApp
+            window.open(whatsappURL, '_blank');
         }
 
-        // --- SECRET ADMIN ENGINE ---
+        // --- SECRET ADMIN PANEL ENGINE ---
         let clickCount = 0;
         let clickTimer;
 
@@ -219,6 +403,7 @@
                     alert("Incorrect Password!");
                 }
             }
+            // Reset click count if not clicked fast enough
             clickTimer = setTimeout(() => { clickCount = 0; }, 2000);
         }
 
@@ -226,7 +411,7 @@
             document.getElementById('admin-modal').classList.toggle('hidden');
         }
 
-        // --- AUTO IMAGE UPLOAD & SAVE LOGIC ---
+        // Auto Image Upload & Save to Database
         async function handleAddNewProduct(e) {
             e.preventDefault();
             const btn = document.getElementById('admin-submit-btn');
@@ -235,18 +420,18 @@
 
             const imageFile = document.getElementById('admin-image').files[0];
             
-            // 1. Upload Image to ImgBB (No Backend Required)
             const formData = new FormData();
             formData.append("image", imageFile);
             
             try {
+                // Uploading to free ImgBB server
                 const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
                 const data = await response.json();
                 
                 if (data.success) {
                     const imageUrl = data.data.url;
 
-                    // 2. Create New Product Object
+                    // Create New Product
                     const newProduct = {
                         id: Date.now(),
                         title: document.getElementById('admin-title').value,
@@ -259,17 +444,16 @@
                         }]
                     };
 
-                    // 3. Save to Database (LocalStorage for now)
-                    products.unshift(newProduct); // Add to top
+                    // Save and render
+                    products.unshift(newProduct); 
                     localStorage.setItem('framecraft_db', JSON.stringify(products));
 
-                    // 4. Update UI
                     renderProducts(products);
                     toggleAdminModal();
                     document.getElementById('add-product-form').reset();
                     alert("Product Added Successfully!");
                 } else {
-                    alert("Failed to upload image.");
+                    alert("Failed to upload image. Please try again.");
                 }
             } catch (error) {
                 alert("Error uploading image. Check your internet connection.");
@@ -279,7 +463,7 @@
             }
         }
 
-        // Boot up
+        // Initial Initialization
         renderProducts(products);
     </script>
 </body>
