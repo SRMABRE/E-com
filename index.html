@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- html2pdf for Automated Invoices -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <!-- DOMPurify for Robust Input Sanitization -->
+    <!-- DOMPurify for Input Sanitization -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     
     <style>
@@ -26,18 +26,14 @@
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Mobile double-tap zoom prevention */
         .prevent-zoom { touch-action: manipulation; }
 
-        /* Custom Toast Animation */
         @keyframes slideInUp {
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
         .toast-animate { animation: slideInUp 0.3s ease-out forwards; }
 
-        /* Cart Shake Animation */
         @keyframes cartShake {
             0%, 100% { transform: scale(1); }
             20%, 60% { transform: scale(1.15) rotate(-5deg); }
@@ -51,29 +47,21 @@
     <!-- NAVIGATION BAR -->
     <header class="sticky top-0 z-40 bg-slate-900 text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            
             <div class="flex items-center space-x-2 cursor-pointer prevent-zoom" onclick="triggerAdmin()" title="Secret Admin Trigger">
                 <i class="fa-solid fa-gift text-amber-400 text-2xl"></i>
                 <span class="text-2xl font-extrabold tracking-wide text-white">Frame<span class="text-amber-400">Craft</span></span>
             </div>
             
             <div class="flex items-center space-x-4">
-                <!-- Dark Mode Toggle -->
                 <button onclick="toggleDarkMode()" class="text-gray-300 hover:text-white transition text-xl">
                     <i id="theme-icon" class="fa-solid fa-moon"></i>
                 </button>
-                
-                <!-- Track Order Button -->
                 <button onclick="toggleTrackModal()" class="text-blue-400 hover:text-blue-500 transition text-xl relative" title="Track & Manage Orders">
                     <i class="fa-solid fa-truck-fast"></i>
                 </button>
-
-                <!-- Wishlist Toggle -->
                 <button onclick="filterWishlist()" class="text-red-400 hover:text-red-500 transition text-xl relative">
                     <i class="fa-solid fa-heart"></i>
                 </button>
-
-                <!-- Cart Button -->
                 <button id="cart-btn" onclick="toggleCartModal()" class="relative bg-amber-500 hover:bg-amber-600 text-slate-900 px-4 py-2 rounded-lg font-bold flex items-center space-x-2 transition">
                     <i class="fa-solid fa-cart-shopping text-lg"></i>
                     <span class="hidden sm:inline">Cart</span>
@@ -85,8 +73,6 @@
 
     <!-- MAIN CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 py-6 min-h-screen">
-        
-        <!-- BANNER -->
         <div class="bg-gradient-to-r from-slate-900 to-indigo-900 text-white rounded-2xl p-6 sm:p-10 mb-8 shadow-lg relative overflow-hidden">
             <div class="relative z-10 max-w-xl">
                 <span class="bg-amber-400 text-slate-900 text-xs font-black uppercase px-2.5 py-1 rounded">Customized Gifts</span>
@@ -95,7 +81,6 @@
             </div>
         </div>
 
-        <!-- CATEGORIES & SEARCH -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <div class="flex items-center space-x-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto no-scrollbar" id="category-container">
                 <button onclick="filterCategory('All')" class="category-btn bg-amber-500 text-slate-900 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap shadow-sm">All Items</button>
@@ -104,25 +89,19 @@
                 <button onclick="filterCategory('Magic Mugs')" class="category-btn bg-white dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-full text-sm font-medium border whitespace-nowrap">Magic Mugs</button>
             </div>
             
-            <!-- Live Search Bar -->
             <div class="relative w-full sm:w-64">
                 <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400"></i>
                 <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Search products..." class="w-full pl-9 pr-4 py-2 border dark:border-gray-700 rounded-full bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-amber-400 outline-none transition text-gray-700 dark:text-gray-200">
             </div>
         </div>
 
-        <!-- PRODUCT GRID -->
-        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Dynamic JavaScript Render -->
-        </div>
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
     </main>
 
-    <!-- FLOATING SCROLL-TO-TOP BUTTON -->
     <button id="scroll-top-btn" onclick="scrollToTop()" class="fixed bottom-6 left-6 z-40 bg-amber-500 hover:bg-amber-600 text-slate-900 p-3 rounded-full shadow-lg hidden transition-opacity duration-300">
         <i class="fa-solid fa-arrow-up text-lg"></i>
     </button>
 
-    <!-- FOOTER -->
     <footer class="bg-slate-900 text-gray-400 py-8 text-center text-sm border-t border-slate-800">
         <p class="font-bold text-white mb-2">FrameCraft Gifting Store</p>
         <p>Premium customized products tailored for your loved ones.</p>
@@ -134,7 +113,7 @@
         <p class="mt-2 text-xs font-semibold text-amber-400/80">Engineered by Syed Mautasim Billah</p>
     </footer>
 
-    <!-- SWIPEABLE IMAGE GALLERY MODAL -->
+    <!-- GALLERY MODAL -->
     <div id="gallery-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4">
         <button onclick="toggleGallery()" class="absolute top-4 right-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10">&times;</button>
         <button onclick="prevGalleryImage()" class="absolute left-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10 bg-black/50 p-2 rounded-full"><i class="fa-solid fa-chevron-left"></i></button>
@@ -142,7 +121,7 @@
         <button onclick="nextGalleryImage()" class="absolute right-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10 bg-black/50 p-2 rounded-full"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
 
-    <!-- TRACK ORDER MODAL (NEW) -->
+    <!-- TRACK ORDER MODAL -->
     <div id="track-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
             <div class="bg-blue-600 p-4 flex justify-between items-center text-white">
@@ -150,14 +129,12 @@
                 <button onclick="toggleTrackModal()" class="text-white text-2xl font-bold hover:text-gray-200">&times;</button>
             </div>
             <div class="p-6 flex flex-col space-y-4">
-                <p class="text-xs text-gray-500 dark:text-gray-400">Enter your Order no. to check its current status or to request a cancellation.</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Enter your Order ID to check status or request cancellation.</p>
                 <div class="flex space-x-2">
-                    <input type="text" id="track-order-id" placeholder="Enter Order ID (e.g. 1234)" class="w-full p-2.5 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-sm focus:ring-2 focus:ring-blue-400 outline-none text-gray-800 dark:text-white">
+                    <input type="text" id="track-order-id" placeholder="Enter Order ID" class="w-full p-2.5 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-sm focus:ring-2 focus:ring-blue-400 outline-none text-gray-800 dark:text-white">
                     <button onclick="checkOrderStatus()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded text-sm transition shadow-sm">Search</button>
                 </div>
-                <div id="track-result-container" class="mt-2">
-                    <!-- Tracking results dynamically rendered here -->
-                </div>
+                <div id="track-result-container" class="mt-2"></div>
             </div>
         </div>
     </div>
@@ -165,7 +142,6 @@
     <!-- SECRET ADMIN PANEL MODAL -->
     <div id="admin-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            
             <div class="bg-amber-500 p-4 flex justify-between items-center text-slate-900">
                 <h2 class="text-xl font-bold"><i class="fa-solid fa-lock mr-2"></i>Owner Dashboard</h2>
                 <button onclick="toggleAdminModal()" class="text-slate-900 text-2xl font-bold">&times;</button>
@@ -205,15 +181,12 @@
                         <textarea id="admin-desc" rows="2" placeholder="Product details..." required class="w-full mt-1 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none"></textarea>
                     </div>
                     
-                    <!-- DYNAMIC MULTIPLE VARIANTS BUILDER -->
                     <div>
                         <div class="flex justify-between items-center mb-1">
                             <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Product Variants (Size & Price)</label>
                             <button type="button" onclick="addVariantField()" class="text-xs bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-2 py-0.5 rounded"><i class="fa-solid fa-plus mr-1"></i>Add Variant</button>
                         </div>
-                        <div id="variant-builder-container" class="space-y-2">
-                            <!-- Dynamic Rows Injected Here -->
-                        </div>
+                        <div id="variant-builder-container" class="space-y-2"></div>
                     </div>
 
                     <div class="w-full">
@@ -232,10 +205,8 @@
                 </form>
             </div>
 
-            <!-- TAB 2: ORDERS DASHBOARD (ANALYTICS + EXPORT + FILTERS) -->
+            <!-- TAB 2: ORDERS DASHBOARD -->
             <div id="admin-orders-section" class="p-6 overflow-y-auto hidden bg-gray-100 dark:bg-gray-900 flex-1">
-                
-                <!-- Analytics Cards -->
                 <div class="grid grid-cols-3 gap-4 mb-6">
                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border dark:border-gray-700">
                         <p class="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">Total Revenue</p>
@@ -251,7 +222,6 @@
                     </div>
                 </div>
 
-                <!-- Filters & Export -->
                 <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                     <div class="flex space-x-2 flex-wrap gap-y-2">
                         <button onclick="renderAdminOrders('All')" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs font-bold hover:bg-gray-300 transition">All</button>
@@ -269,7 +239,7 @@
                 <div id="orders-list-container" class="space-y-4"></div>
             </div>
 
-            <!-- TAB 3: MANAGE / DELETE PRODUCTS -->
+            <!-- TAB 3: MANAGE PRODUCTS -->
             <div id="admin-products-section" class="p-6 overflow-y-auto hidden bg-gray-50 dark:bg-gray-900 flex-1">
                 <h3 class="text-xs font-bold text-gray-500 uppercase mb-3">Inventory Management</h3>
                 <div id="admin-products-list" class="space-y-3"></div>
@@ -279,8 +249,7 @@
 
     <!-- CART & CHECKOUT MODAL -->
     <div id="cart-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex justify-end">
-        <div class="bg-white dark:bg-gray-800 w-full max-w-lg h-full shadow-2xl flex flex-col justify-between overflow-hidden transform transition-transform">
-            
+        <div class="bg-white dark:bg-gray-800 w-full max-w-lg h-full shadow-2xl flex flex-col justify-between overflow-hidden">
             <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
                 <h2 class="text-lg font-bold"><i class="fa-solid fa-bag-shopping text-amber-400 mr-2"></i> Your Shopping Bag</h2>
                 <div class="flex items-center space-x-3">
@@ -291,16 +260,12 @@
 
             <div class="p-4 overflow-y-auto flex-1 space-y-4" id="cart-items-container"></div>
 
-            <!-- Checkout Form & Summary -->
             <div class="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-900 space-y-3">
-                
-                <!-- Promo Code Section -->
                 <div class="flex space-x-2">
                     <input type="text" id="promo-input" placeholder="Promo Code (e.g. DISCOUNT10)" class="uppercase text-xs p-2 border dark:border-gray-700 rounded flex-1 bg-white dark:bg-gray-800 outline-none">
                     <button onclick="applyPromoCode()" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-xs font-bold px-3 py-2 rounded transition">Apply</button>
                 </div>
 
-                <!-- Delivery Selection -->
                 <div class="flex space-x-4 mb-2 text-xs font-medium dark:text-gray-300">
                     <label class="flex items-center space-x-1 cursor-pointer">
                         <input type="radio" name="shipping" value="0" checked onchange="updateCartUI()" class="text-amber-500 focus:ring-amber-400">
@@ -319,7 +284,6 @@
 
                 <form id="checkout-form" onsubmit="handleWhatsAppOrder(event)" class="space-y-2">
                     <input type="text" id="cust-name" placeholder="Full Name *" required class="w-full text-xs p-2.5 border dark:border-gray-700 rounded bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none">
-                    <!-- Strict Validation Pattern -->
                     <input type="tel" id="cust-phone" pattern="[0-9]{10}" title="Please enter exactly 10 digits" placeholder="WhatsApp Number (10 Digits) *" required class="w-full text-xs p-2.5 border dark:border-gray-700 rounded bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none">
                     <textarea id="cust-address" placeholder="Complete Delivery Address *" rows="2" required class="w-full text-xs p-2.5 border dark:border-gray-700 rounded bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none"></textarea>
                     <textarea id="cust-custom-text" placeholder="Customization details (e.g. Text/Name to print)" rows="2" class="w-full text-xs p-2.5 border dark:border-amber-900 rounded focus:ring-2 focus:ring-amber-400 outline-none bg-amber-50 dark:bg-amber-900/20"></textarea>
@@ -333,17 +297,12 @@
         </div>
     </div>
 
-    <!-- Hidden Div for PDF Invoice Generation -->
     <div id="invoice-template" class="hidden bg-white p-8 text-black w-[800px]"></div>
-    
-    <!-- Toast Container (Stacking support) -->
     <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- JAVASCRIPT ENGINE -->
     <script>
         document.getElementById("year").innerText = new Date().getFullYear();
 
-        // --- CORE CONFIGURATION & STATE ---
         const MY_WHATSAPP_NUMBER = "919906764541"; 
         const ADMIN_PASSWORD = "owner"; 
         const IMGBB_API_KEY = "1e327a3c3d5e278f2cb6ed311e92d6e3"; 
@@ -359,12 +318,11 @@
         let wishlist = JSON.parse(localStorage.getItem('framecraft_wishlist')) || [];
         let currentFilter = 'All';
         let showWishlistOnly = false;
-        let appliedDiscount = 0; // Discount percentage
+        let appliedDiscount = 0;
         let galleryImages = [];
         let galleryIndex = 0;
 
-        // --- UTILITY & SANITIZATION FUNCTIONS ---
-        const sanitize = (str) => DOMPurify.sanitize(str.trim());
+        const sanitize = (str) => DOMPurify.sanitize(str ? str.trim() : '');
         
         function showToast(msg, type = 'success') {
             const container = document.getElementById('toast-container');
@@ -409,10 +367,9 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- ORDER TRACKING & CANCELLATION ENGINE (NEW) ---
         function toggleTrackModal() {
             document.getElementById('track-modal').classList.toggle('hidden');
-            document.getElementById('track-result-container').innerHTML = ''; // Clear previous searches
+            document.getElementById('track-result-container').innerHTML = ''; 
             document.getElementById('track-order-id').value = ''; 
         }
 
@@ -438,7 +395,6 @@
             if(order.status === 'Delivered') statusColor = 'text-emerald-500 bg-emerald-100 dark:bg-emerald-900/30';
             if(order.status === 'Cancelled') statusColor = 'text-red-500 bg-red-100 dark:bg-red-900/30';
 
-            // Only allow cancellation if pending or processing
             let cancelBtnHtml = '';
             if(order.status === 'Pending' || order.status === 'Processing') {
                 cancelBtnHtml = `
@@ -477,11 +433,9 @@
                     return;
                 }
                 
-                // 1. Update status to Cancelled
                 orders[idx].status = 'Cancelled';
                 localStorage.setItem('framecraft_orders', JSON.stringify(orders));
                 
-                // 2. Restore Stock into Database
                 order.items.forEach(item => {
                     const dbProdIndex = products.findIndex(p => p.id === item.id);
                     if(dbProdIndex > -1 && products[dbProdIndex].stock !== undefined) {
@@ -489,25 +443,22 @@
                     }
                 });
                 localStorage.setItem('framecraft_db', JSON.stringify(products));
-                renderProducts(products); // Refresh UI to show restocked items
+                renderProducts(products); 
                 
                 showToast("Order Cancelled Successfully!", "success");
-                checkOrderStatus(); // Refresh the tracking UI view
+                checkOrderStatus(); 
                 
-                // 3. Send WhatsApp alert to store owner
-                const msg = `⚠️ *ORDER CANCELLED* ⚠️\n\nCustomer *${order.name}* has successfully cancelled their order.\n\n*Order ID:* #${order.id}\n*Status update:* The items have been restocked automatically.\n\n_Please review this in your web dashboard._`;
+                const msg = `⚠️ *ORDER CANCELLED* ⚠️\n\nCustomer *${order.name}* has cancelled their order.\n\n*Order ID:* #${order.id}\n*Status:* Items restocked automatically.`;
                 window.open(`https://wa.me/${MY_WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
             }
         }
 
-
-        // --- UI & RENDER ENGINE ---
         function renderProducts(itemsToRender) {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
 
-            if(itemsToRender.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-12 flex flex-col items-center text-gray-400"><i class="fa-solid fa-box-open text-5xl mb-4 opacity-50"></i><p>No products found in this category.</p></div>`;
+            if(!itemsToRender || itemsToRender.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 flex flex-col items-center text-gray-400"><i class="fa-solid fa-box-open text-5xl mb-4 opacity-50"></i><p>No products found.</p></div>`;
                 return;
             }
 
@@ -516,11 +467,10 @@
                 const isOutOfStock = stockVal <= 0;
                 const isWished = wishlist.includes(prod.id);
                 
-                const sizeOptions = prod.sizes.map((s, idx) => `<option value="${idx}">${s.label} - ₹${s.price}</option>`).join('');
+                const sizeOptions = (prod.sizes || []).map((s, idx) => `<option value="${idx}">${s.label} - ₹${s.price}</option>`).join('');
 
                 grid.innerHTML += `
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 overflow-hidden product-card flex flex-col justify-between relative group">
-                        
                         <button onclick="toggleWishlist(${prod.id}, event)" class="absolute top-2 left-2 z-10 w-8 h-8 rounded-full bg-white/80 dark:bg-gray-900/80 shadow flex items-center justify-center transition">
                             <i class="fa-heart ${isWished ? 'fa-solid text-red-500' : 'fa-regular text-gray-400 dark:text-gray-300'}"></i>
                         </button>
@@ -556,7 +506,6 @@
             });
         }
 
-        // --- FILTER & SEARCH ---
         function filterCategory(category) {
             currentFilter = category;
             showWishlistOnly = false;
@@ -590,7 +539,7 @@
 
         function filterWishlist() {
             showWishlistOnly = !showWishlistOnly;
-            if(showWishlistOnly) { showToast("Showing your favorites", "info"); }
+            if(showWishlistOnly) { showToast("Showing favorites", "info"); }
             handleSearch();
         }
 
@@ -603,7 +552,6 @@
             handleSearch();
         }
 
-        // --- SWIPEABLE GALLERY MODAL ---
         function openGallery(imgUrl) {
             galleryImages = products.map(p => p.image);
             galleryIndex = galleryImages.indexOf(imgUrl);
@@ -623,7 +571,6 @@
             document.getElementById('gallery-image').src = galleryImages[galleryIndex];
         }
 
-        // --- CART ENGINE & PROMO CODES ---
         function addToCart(productId) {
             const prod = products.find(p => p.id === productId);
             const sizeSelect = document.getElementById(`size-select-${productId}`);
@@ -641,7 +588,6 @@
             if (cartItemIndex > -1) cart[cartItemIndex].quantity += 1;
             else cart.push({ id: prod.id, title: prod.title, size: selectedSizeObj.label, price: selectedSizeObj.price, quantity: 1 });
 
-            // Trigger Shake Animation on Navbar Cart Button
             const cartBtn = document.getElementById('cart-btn');
             cartBtn.classList.add('shake-cart');
             setTimeout(() => cartBtn.classList.remove('shake-cart'), 400);
@@ -732,7 +678,6 @@
             if (cart.length === 0) return showToast("Your cart is empty!", "error");
 
             const name = sanitize(document.getElementById('cust-name').value);
-            // Strict Regex Phone Cleaning
             const rawPhone = document.getElementById('cust-phone').value;
             const phone = sanitize(rawPhone.replace(/\D/g, ''));
             
@@ -741,7 +686,6 @@
                 return;
             }
 
-            // Frontend Stock Validation
             for (let item of cart) {
                 const prod = products.find(p => p.id === item.id);
                 if (prod && prod.stock < item.quantity) {
@@ -761,7 +705,7 @@
             cart.forEach((item, idx) => {
                 grandTotal += item.price * item.quantity;
                 itemsFormatted += `${idx + 1}. ${item.title} (${item.size}) - ₹${item.price} x ${item.quantity}\n`;
-                // Deduct Inventory Logic
+                
                 const dbProdIndex = products.findIndex(p => p.id === item.id);
                 if(dbProdIndex > -1 && products[dbProdIndex].stock !== undefined) {
                     products[dbProdIndex].stock -= item.quantity;
@@ -782,7 +726,8 @@
             savedOrders.unshift(newOrder);
             localStorage.setItem('framecraft_orders', JSON.stringify(savedOrders));
 
-            const message = `🛒 *NEW ORDER #${orderId}*\n\n👤 *Customer Details:*\n- *Name:* ${name}\n- *Phone:* ${phone}\n- *Address:* ${address}\n\n📦 *Items Ordered:*\n${itemsFormatted}🚚 *Shipping:* ${shippingFee === 0 ? 'Standard (Free)' : 'Express (+₹50)'}\n📝 *Customization:*\n"${customText}"\n\n💰 *Total Amount:* ₹${grandTotal}\n\n🔐 *Delivery Secret OTP:* *${deliveryOtp}*\n*(Keep this safe for the delivery agent!)*\n\n_Please let me know where to send my photos/details!_`;
+            // READONLY UNEDITABLE GENERATED TEXT LINK
+            const message = `🛒 *NEW ORDER #${orderId}*\n\n👤 *Customer Details:*\n- *Name:* ${name}\n- *Phone:* ${phone}\n- *Address:* ${address}\n\n📦 *Items Ordered:*\n${itemsFormatted}🚚 *Shipping:* ${shippingFee === 0 ? 'Standard (Free)' : 'Express (+₹50)'}\n📝 *Customization:*\n"${customText}"\n\n💰 *Total Amount:* ₹${grandTotal}\n\n🔐 *Delivery Secret OTP:* *${deliveryOtp}*`;
 
             window.open(`https://wa.me/${MY_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
 
@@ -794,7 +739,6 @@
             renderProducts(products);
         }
 
-        // --- ADMIN DASHBOARD & MULTIPLE VARIANTS ---
         let clickCount = 0; let clickTimer;
 
         function triggerAdmin() {
@@ -821,13 +765,12 @@
             document.getElementById(`tab-${tabName}`).className = "flex-1 py-3 px-4 font-bold text-amber-600 border-b-2 border-amber-600 transition whitespace-nowrap";
             
             if(tabName === 'add' && document.getElementById('variant-builder-container').children.length === 0) {
-                addVariantField(); // default 1 field
+                addVariantField(); 
             }
             if(tabName === 'orders') renderAdminOrders('All');
             if(tabName === 'products') renderAdminProductList();
         }
 
-        // Multiple Variant Row Builder
         function addVariantField(label = '', price = '') {
             const container = document.getElementById('variant-builder-container');
             const row = document.createElement('div');
@@ -840,7 +783,6 @@
             container.appendChild(row);
         }
 
-        // Dashboard Analytics & Manual Status Override
         function renderAdminOrders(filterStatus = 'All') {
             let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
             
@@ -872,8 +814,8 @@
                             </select>
                         </div>
                         <div class="flex space-x-2">
-                            <button onclick="downloadInvoice(${order.id})" class="text-blue-500 hover:text-blue-700" title="Generate PDF Receipt"><i class="fa-solid fa-file-pdf"></i></button>
-                            <button onclick="deleteOrder(${order.id})" class="text-red-400 hover:text-red-600" title="Delete Order"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="downloadInvoice(${order.id})" class="text-blue-500 hover:text-blue-700"><i class="fa-solid fa-file-pdf"></i></button>
+                            <button onclick="deleteOrder(${order.id})" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                     <div class="space-y-1 mb-3 text-gray-700 dark:text-gray-300">
@@ -883,19 +825,12 @@
                     <div class="bg-gray-50 dark:bg-gray-900 p-2 rounded border dark:border-gray-700 mb-3">
                         <ul class="space-y-1">
                             ${order.items.map(i => `<li class="flex justify-between text-xs text-gray-600 dark:text-gray-400"><span>${i.quantity}x ${i.title} (${i.size})</span> <span>₹${i.price * i.quantity}</span></li>`).join('')}
-                            ${order.shipping > 0 ? `<li class="flex justify-between text-xs text-gray-600 dark:text-gray-400 border-t pt-1"><span>Express Delivery</span> <span>₹${order.shipping}</span></li>` : ''}
                         </ul>
                         <div class="flex justify-between items-center border-t dark:border-gray-700 mt-2 pt-2">
                             <span class="font-bold text-slate-900 dark:text-white">Total</span>
                             <span class="font-extrabold text-emerald-600 text-base">₹${order.total}</span>
                         </div>
                     </div>
-                    ${order.status === 'Pending' ? `
-                        <div class="flex space-x-2 items-center bg-indigo-50 dark:bg-indigo-900/20 p-2 rounded border dark:border-indigo-800">
-                            <span class="text-xs font-bold text-indigo-900 dark:text-indigo-300">OTP: ${order.otp}</span>
-                            <input type="text" id="otp-input-${order.id}" placeholder="Enter OTP" maxlength="4" class="text-xs p-1 border rounded w-20 text-center dark:bg-gray-800 dark:text-white">
-                            <button onclick="verifyOrderOtp(${order.id})" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded">Verify</button>
-                        </div>` : ''}
                 </div>
             `).join('');
         }
@@ -904,7 +839,6 @@
             let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
             const idx = orders.findIndex(o => o.id === orderId);
             if(idx > -1) {
-                // If it wasn't cancelled before, and now admin marks it Cancelled, restore stock
                 if(orders[idx].status !== 'Cancelled' && newStatus === 'Cancelled') {
                     orders[idx].items.forEach(item => {
                         const dbProdIndex = products.findIndex(p => p.id === item.id);
@@ -923,7 +857,6 @@
             }
         }
 
-        // CSV Export Logic
         function exportOrdersCSV() {
             let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
             if(orders.length === 0) return showToast("No data to export", "error");
@@ -940,9 +873,8 @@
             link.remove();
         }
 
-        // PDF Invoice Generation with Error Handling
         function downloadInvoice(orderId) {
-            showToast("Generating PDF Invoice...", "info");
+            showToast("Generating Invoice...", "info");
             let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
             const order = orders.find(o => o.id === orderId);
             if(!order) return;
@@ -967,15 +899,10 @@
                         <thead><tr class="bg-slate-100"><th class="p-2 border">Item</th><th class="p-2 border">Qty</th><th class="p-2 border">Price</th><th class="p-2 border">Total</th></tr></thead>
                         <tbody>
                             ${order.items.map(i => `<tr><td class="p-2 border text-sm">${i.title} (${i.size})</td><td class="p-2 border text-sm">${i.quantity}</td><td class="p-2 border text-sm">₹${i.price}</td><td class="p-2 border text-sm">₹${i.price * i.quantity}</td></tr>`).join('')}
-                            ${order.shipping > 0 ? `<tr><td colspan="3" class="p-2 border text-sm text-right">Express Delivery</td><td class="p-2 border text-sm">₹${order.shipping}</td></tr>` : ''}
                         </tbody>
                     </table>
                     <div class="flex justify-between items-center bg-gray-50 p-4 font-bold text-lg border">
-                        <span>Grand Total Billed:</span><span class="text-emerald-600">₹${order.total}</span>
-                    </div>
-                    <div class="mt-12 text-center text-xs text-gray-400 pt-4 border-t border-dashed">
-                        <p>Thank you for choosing FrameCraft! This is a system generated receipt.</p>
-                        <p>Status: ${order.status}</p>
+                        <span>Grand Total:</span><span class="text-emerald-600">₹${order.total}</span>
                     </div>
                 </div>
             `;
@@ -984,10 +911,10 @@
             try {
                 html2pdf().set({ margin: 0.5, filename: `Invoice_${order.id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(template).save().then(() => {
                     template.classList.add('hidden');
-                    showToast("Invoice downloaded successfully!");
+                    showToast("Invoice downloaded!");
                 }).catch(err => {
                     template.classList.add('hidden');
-                    showToast("Failed to generate PDF on this device", "error");
+                    showToast("Failed PDF generation", "error");
                 });
             } catch (err) {
                 template.classList.add('hidden');
@@ -995,29 +922,14 @@
             }
         }
 
-        function verifyOrderOtp(orderId) {
-            const input = document.getElementById(`otp-input-${orderId}`).value;
-            let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
-            const idx = orders.findIndex(o => o.id === orderId);
-            if(idx > -1) {
-                if(orders[idx].otp.toString() === input) {
-                    orders[idx].status = "Delivered";
-                    localStorage.setItem('framecraft_orders', JSON.stringify(orders));
-                    showToast("Order Delivered Successfully!");
-                    renderAdminOrders('All');
-                } else showToast("Incorrect OTP!", "error");
-            }
-        }
-
         function deleteOrder(orderId) {
-            if(confirm("Permanently delete this order?")) {
+            if(confirm("Permanently delete order?")) {
                 let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
                 localStorage.setItem('framecraft_orders', JSON.stringify(orders.filter(o => o.id !== orderId)));
                 renderAdminOrders('All');
             }
         }
 
-        // Manage items tab with Low Stock Alert
         function renderAdminProductList() {
             const container = document.getElementById('admin-products-list');
             container.innerHTML = products.length === 0 ? `<p class="text-xs text-gray-400">No products available.</p>` : products.map(p => {
@@ -1030,14 +942,14 @@
                         <div>
                             <h4 class="font-bold text-gray-800 dark:text-gray-100 flex items-center">
                                 ${p.title}
-                                ${isLowStock ? `<span class="ml-2 w-2 h-2 rounded-full bg-red-500 animate-ping" title="Low Stock Alert"></span>` : ''}
+                                ${isLowStock ? `<span class="ml-2 w-2 h-2 rounded-full bg-red-500 animate-ping"></span>` : ''}
                             </h4>
                             <span class="${isLowStock ? 'text-red-500 font-bold' : 'text-amber-600'}">Stock: ${stockVal}</span>
                         </div>
                     </div>
                     <div class="flex space-x-2">
                         <button onclick="editProduct(${p.id})" class="bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 text-blue-600 p-2 rounded-lg font-bold"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteProduct(${p.id}); renderAdminProductList();" class="bg-red-50 dark:bg-red-900/30 hover:bg-red-100 text-red-600 p-2 rounded-lg font-bold"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="deleteProduct(${p.id});" class="bg-red-50 dark:bg-red-900/30 hover:bg-red-100 text-red-600 p-2 rounded-lg font-bold"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             `}).join('');
@@ -1062,91 +974,105 @@
             document.getElementById('admin-desc').value = prod.description;
             document.getElementById('admin-stock').value = prod.stock !== undefined ? prod.stock : 10;
             
-            // Populate multiple variants dynamically
             const container = document.getElementById('variant-builder-container');
             container.innerHTML = '';
-            prod.sizes.forEach(s => addVariantField(s.label, s.price));
+            (prod.sizes || []).forEach(s => addVariantField(s.label, s.price));
 
             document.getElementById('admin-submit-btn').innerHTML = `<i class="fa-solid fa-save mr-2"></i>Update Product`;
         }
 
+        /* GUARANTEED PRODUCT ADD / EDIT HANDLER WITH BASE64 FALLBACK */
         async function handleProductSubmit(e) {
             e.preventDefault();
             const btn = document.getElementById('admin-submit-btn');
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing...`;
             btn.disabled = true;
 
-            const editId = document.getElementById('admin-edit-id').value;
-            const imageFile = document.getElementById('admin-image').files[0];
-            let imageUrl = "";
+            try {
+                const editId = document.getElementById('admin-edit-id').value;
+                const imageFile = document.getElementById('admin-image').files[0];
+                let imageUrl = "";
 
-            if(editId && !imageFile) {
-                const existingProd = products.find(p => p.id == editId);
-                imageUrl = existingProd.image;
-            } else if (imageFile) {
-                try {
-                    const formData = new FormData(); formData.append("image", imageFile);
-                    const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
-                    const data = await res.json();
-                    if (data.success) imageUrl = data.data.url;
-                    else throw new Error();
-                } catch (err) {
-                    imageUrl = await new Promise(res => { const r = new FileReader(); r.onload = e => res(e.target.result); r.readAsDataURL(imageFile); });
+                if(editId && !imageFile) {
+                    const existingProd = products.find(p => p.id == editId);
+                    imageUrl = existingProd ? existingProd.image : "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=500&q=80";
+                } else if (imageFile) {
+                    try {
+                        const formData = new FormData(); 
+                        formData.append("image", imageFile);
+                        const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
+                        const data = await res.json();
+                        if (data && data.success) {
+                            imageUrl = data.data.url;
+                        } else {
+                            throw new Error("ImgBB API rejected");
+                        }
+                    } catch (err) {
+                        // Fallback to local DataURL if cloud upload fails
+                        imageUrl = await new Promise(res => { 
+                            const r = new FileReader(); 
+                            r.onload = e => res(e.target.result); 
+                            r.readAsDataURL(imageFile); 
+                        });
+                    }
+                } else {
+                    imageUrl = "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=500&q=80";
                 }
-            } else {
-                alert("Please select an image!"); btn.disabled = false; return;
-            }
 
-            // Extract variant builder rows
-            const variantRows = document.querySelectorAll('.variant-row');
-            const sizesArr = [];
-            variantRows.forEach(row => {
-                const label = row.querySelector('.variant-label').value.trim();
-                const price = parseFloat(row.querySelector('.variant-price').value);
-                if(label && !isNaN(price)) {
-                    sizesArr.push({ label, price });
+                const variantRows = document.querySelectorAll('.variant-row');
+                const sizesArr = [];
+                variantRows.forEach(row => {
+                    const label = row.querySelector('.variant-label').value.trim();
+                    const price = parseFloat(row.querySelector('.variant-price').value);
+                    if(label && !isNaN(price)) {
+                        sizesArr.push({ label, price });
+                    }
+                });
+
+                if(sizesArr.length === 0) {
+                    alert("Please add at least one valid variant!");
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i>Save Product`;
+                    return;
                 }
-            });
 
-            if(sizesArr.length === 0) {
-                alert("Please add at least one valid variant!");
+                const newProduct = {
+                    id: editId ? parseInt(editId) : Date.now(),
+                    title: sanitize(document.getElementById('admin-title').value),
+                    category: sanitize(document.getElementById('admin-category').value),
+                    description: sanitize(document.getElementById('admin-desc').value),
+                    image: imageUrl,
+                    stock: parseInt(document.getElementById('admin-stock').value),
+                    sizes: sizesArr
+                };
+
+                if(editId) {
+                    const idx = products.findIndex(p => p.id == editId);
+                    if(idx > -1) products[idx] = newProduct;
+                    else products.unshift(newProduct);
+                    showToast("Product Updated!");
+                } else {
+                    products.unshift(newProduct);
+                    showToast("Product Added Successfully!");
+                }
+
+                localStorage.setItem('framecraft_db', JSON.stringify(products));
+                
+                renderProducts(products); 
+                filterCategory('All'); 
+                
+                document.getElementById('add-product-form').reset();
+                document.getElementById('admin-edit-id').value = "";
+                document.getElementById('variant-builder-container').innerHTML = '';
+                addVariantField();
+            } catch (err) {
+                showToast("Error saving product: " + err.message, "error");
+            } finally {
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i>Save Product`;
                 btn.disabled = false;
-                return;
             }
-
-            const newProduct = {
-                id: editId ? parseInt(editId) : Date.now(),
-                title: sanitize(document.getElementById('admin-title').value),
-                category: sanitize(document.getElementById('admin-category').value),
-                description: sanitize(document.getElementById('admin-desc').value),
-                image: imageUrl,
-                stock: parseInt(document.getElementById('admin-stock').value),
-                sizes: sizesArr
-            };
-
-            if(editId) {
-                const idx = products.findIndex(p => p.id == editId);
-                products[idx] = newProduct;
-                showToast("Product Updated!");
-            } else {
-                products.unshift(newProduct);
-                showToast("Product Added!");
-            }
-
-            localStorage.setItem('framecraft_db', JSON.stringify(products));
-            renderProducts(products); 
-            filterCategory('All'); 
-            
-            // Reset form
-            document.getElementById('add-product-form').reset();
-            document.getElementById('admin-edit-id').value = "";
-            document.getElementById('variant-builder-container').innerHTML = '';
-            addVariantField();
-            btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i>Save Product`;
-            btn.disabled = false;
         }
 
-        // Initialization
         addVariantField();
         updateCartUI();
         renderProducts(products);
