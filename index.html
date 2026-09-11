@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- html2pdf for Automated Invoices -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- DOMPurify for Robust Input Sanitization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     
     <style>
         .product-card:hover { transform: translateY(-4px); transition: all 0.3s ease; }
@@ -25,12 +27,23 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
+        /* Mobile double-tap zoom prevention */
+        .prevent-zoom { touch-action: manipulation; }
+
         /* Custom Toast Animation */
         @keyframes slideInUp {
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
         .toast-animate { animation: slideInUp 0.3s ease-out forwards; }
+
+        /* Cart Shake Animation */
+        @keyframes cartShake {
+            0%, 100% { transform: scale(1); }
+            20%, 60% { transform: scale(1.15) rotate(-5deg); }
+            40%, 80% { transform: scale(1.15) rotate(5deg); }
+        }
+        .shake-cart { animation: cartShake 0.4s ease-in-out; }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 font-sans text-gray-800 dark:text-gray-100 antialiased transition-colors duration-300">
@@ -39,7 +52,7 @@
     <header class="sticky top-0 z-40 bg-slate-900 text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             
-            <div class="flex items-center space-x-2 cursor-pointer" onclick="triggerAdmin()" title="Secret Admin Trigger">
+            <div class="flex items-center space-x-2 cursor-pointer prevent-zoom" onclick="triggerAdmin()" title="Secret Admin Trigger">
                 <i class="fa-solid fa-gift text-amber-400 text-2xl"></i>
                 <span class="text-2xl font-extrabold tracking-wide text-white">Frame<span class="text-amber-400">Craft</span></span>
             </div>
@@ -56,7 +69,7 @@
                 </button>
 
                 <!-- Cart Button -->
-                <button onclick="toggleCartModal()" class="relative bg-amber-500 hover:bg-amber-600 text-slate-900 px-4 py-2 rounded-lg font-bold flex items-center space-x-2 transition">
+                <button id="cart-btn" onclick="toggleCartModal()" class="relative bg-amber-500 hover:bg-amber-600 text-slate-900 px-4 py-2 rounded-lg font-bold flex items-center space-x-2 transition">
                     <i class="fa-solid fa-cart-shopping text-lg"></i>
                     <span class="hidden sm:inline">Cart</span>
                     <span id="cart-count" class="bg-slate-900 text-amber-400 text-xs px-2 py-0.5 rounded-full font-extrabold">0</span>
@@ -99,6 +112,11 @@
         </div>
     </main>
 
+    <!-- FLOATING SCROLL-TO-TOP BUTTON -->
+    <button id="scroll-top-btn" onclick="scrollToTop()" class="fixed bottom-6 left-6 z-40 bg-amber-500 hover:bg-amber-600 text-slate-900 p-3 rounded-full shadow-lg hidden transition-opacity duration-300">
+        <i class="fa-solid fa-arrow-up text-lg"></i>
+    </button>
+
     <!-- FOOTER -->
     <footer class="bg-slate-900 text-gray-400 py-8 text-center text-sm border-t border-slate-800">
         <p class="font-bold text-white mb-2">FrameCraft Gifting Store</p>
@@ -108,12 +126,15 @@
             <a href="#" class="hover:text-amber-400 transition"><i class="fa-brands fa-facebook text-xl"></i></a>
         </div>
         <p class="mt-4 text-xs opacity-50">&copy; <span id="year"></span> FrameCraft. All Rights Reserved.</p>
+        <p class="mt-2 text-xs font-semibold text-amber-400/80">Engineered by Syed Mautasim Billah</p>
     </footer>
 
-    <!-- IMAGE GALLERY MODAL -->
+    <!-- SWIPEABLE IMAGE GALLERY MODAL -->
     <div id="gallery-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4">
-        <button onclick="toggleGallery()" class="absolute top-4 right-4 text-white text-3xl font-bold hover:text-amber-400 transition">&times;</button>
+        <button onclick="toggleGallery()" class="absolute top-4 right-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10">&times;</button>
+        <button onclick="prevGalleryImage()" class="absolute left-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10 bg-black/50 p-2 rounded-full"><i class="fa-solid fa-chevron-left"></i></button>
         <img id="gallery-image" src="" alt="Gallery" class="max-w-full max-h-[85vh] rounded-lg shadow-2xl object-contain">
+        <button onclick="nextGalleryImage()" class="absolute right-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10 bg-black/50 p-2 rounded-full"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
 
     <!-- SECRET ADMIN PANEL MODAL -->
@@ -159,19 +180,20 @@
                         <textarea id="admin-desc" rows="2" placeholder="Product details..." required class="w-full mt-1 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none"></textarea>
                     </div>
                     
-                    <div class="flex space-x-2">
-                        <div class="w-1/3">
-                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Variant/Size</label>
-                            <input type="text" id="admin-size" placeholder="e.g. 8x10" required class="w-full mt-1 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
+                    <!-- DYNAMIC MULTIPLE VARIANTS BUILDER -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Product Variants (Size & Price)</label>
+                            <button type="button" onclick="addVariantField()" class="text-xs bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-2 py-0.5 rounded"><i class="fa-solid fa-plus mr-1"></i>Add Variant</button>
                         </div>
-                        <div class="w-1/3">
-                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Price (₹)</label>
-                            <input type="number" id="admin-price" placeholder="499" required class="w-full mt-1 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
+                        <div id="variant-builder-container" class="space-y-2">
+                            <!-- Dynamic Rows Injected Here -->
                         </div>
-                        <div class="w-1/3">
-                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Stock Qty</label>
-                            <input type="number" id="admin-stock" placeholder="10" required class="w-full mt-1 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
-                        </div>
+                    </div>
+
+                    <div class="w-full">
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Stock Qty</label>
+                        <input type="number" id="admin-stock" placeholder="10" required class="w-full mt-1 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
                     </div>
                     
                     <div>
@@ -209,6 +231,8 @@
                     <div class="flex space-x-2">
                         <button onclick="renderAdminOrders('All')" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs font-bold hover:bg-gray-300 transition">All</button>
                         <button onclick="renderAdminOrders('Pending')" class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-bold hover:bg-yellow-200 transition">Pending</button>
+                        <button onclick="renderAdminOrders('Processing')" class="px-3 py-1 bg-blue-100 text-blue-800 rounded text-xs font-bold hover:bg-blue-200 transition">Processing</button>
+                        <button onclick="renderAdminOrders('Shipped')" class="px-3 py-1 bg-purple-100 text-purple-800 rounded text-xs font-bold hover:bg-purple-200 transition">Shipped</button>
                         <button onclick="renderAdminOrders('Delivered')" class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded text-xs font-bold hover:bg-emerald-200 transition">Delivered</button>
                     </div>
                     <button onclick="exportOrdersCSV()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-bold flex items-center transition shadow-sm">
@@ -233,7 +257,10 @@
             
             <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
                 <h2 class="text-lg font-bold"><i class="fa-solid fa-bag-shopping text-amber-400 mr-2"></i> Your Shopping Bag</h2>
-                <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+                <div class="flex items-center space-x-3">
+                    <button onclick="clearCart()" class="text-xs bg-red-600/80 hover:bg-red-600 text-white px-2 py-1 rounded flex items-center gap-1 transition"><i class="fa-solid fa-trash"></i> Empty</button>
+                    <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+                </div>
             </div>
 
             <div class="p-4 overflow-y-auto flex-1 space-y-4" id="cart-items-container"></div>
@@ -241,6 +268,12 @@
             <!-- Checkout Form & Summary -->
             <div class="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-900 space-y-3">
                 
+                <!-- Promo Code Section -->
+                <div class="flex space-x-2">
+                    <input type="text" id="promo-input" placeholder="Promo Code (e.g. DISCOUNT10)" class="uppercase text-xs p-2 border dark:border-gray-700 rounded flex-1 bg-white dark:bg-gray-800 outline-none">
+                    <button onclick="applyPromoCode()" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-xs font-bold px-3 py-2 rounded transition">Apply</button>
+                </div>
+
                 <!-- Delivery Selection -->
                 <div class="flex space-x-4 mb-2 text-xs font-medium dark:text-gray-300">
                     <label class="flex items-center space-x-1 cursor-pointer">
@@ -277,7 +310,7 @@
     <!-- Hidden Div for PDF Invoice Generation -->
     <div id="invoice-template" class="hidden bg-white p-8 text-black w-[800px]"></div>
     
-    <!-- Toast Container -->
+    <!-- Toast Container (Stacking support) -->
     <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- JAVASCRIPT ENGINE -->
@@ -292,7 +325,7 @@
         const defaultProducts = [
             { id: 101, title: "Personalized Wooden Frame", category: "Wooden Frames", description: "High quality teak wood finish photo frame.", sizes: [ { label: "8x10 Inch", price: 399 }, { label: "12x18 Inch", price: 599 } ], image: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=500&q=80", stock: 15 },
             { id: 102, title: "Glossy Acrylic Photo Frame", category: "Acrylic Frames", description: "Modern frameless 3mm thick glossy acrylic.", sizes: [ { label: "8x12 Inch", price: 499 }, { label: "12x18 Inch", price: 799 } ], image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&q=80", stock: 10 },
-            { id: 103, title: "Custom Magic Coffee Mug", category: "Magic Mugs", description: "Black mug reveals photo when hot liquid poured.", sizes: [ { label: "Standard 325ml", price: 299 } ], image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80", stock: 0 } // Testing Out of Stock
+            { id: 103, title: "Custom Magic Coffee Mug", category: "Magic Mugs", description: "Black mug reveals photo when hot liquid poured.", sizes: [ { label: "Standard 325ml", price: 299 } ], image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80", stock: 0 }
         ];
 
         let products = JSON.parse(localStorage.getItem('framecraft_db')) || defaultProducts;
@@ -300,15 +333,19 @@
         let wishlist = JSON.parse(localStorage.getItem('framecraft_wishlist')) || [];
         let currentFilter = 'All';
         let showWishlistOnly = false;
+        let appliedDiscount = 0; // Discount percentage
+        let galleryImages = [];
+        let galleryIndex = 0;
 
-        // --- UTILITY FUNCTIONS ---
-        const sanitize = (str) => str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        // --- UTILITY & SANITIZATION FUNCTIONS ---
+        // Robust input sanitization via DOMPurify
+        const sanitize = (str) => DOMPurify.sanitize(str.trim());
         
         function showToast(msg, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = `toast-animate px-4 py-3 rounded-lg shadow-xl text-sm font-bold text-white flex items-center space-x-2 ${type === 'success' ? 'bg-emerald-500' : (type === 'error' ? 'bg-red-500' : 'bg-slate-800')}`;
-            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i> <span>${msg}</span>`;
+            toast.className = `toast-animate pointer-events-auto px-4 py-3 rounded-lg shadow-xl text-sm font-bold text-white flex items-center space-x-2 ${type === 'success' ? 'bg-emerald-500' : (type === 'error' ? 'bg-red-500' : 'bg-slate-800')}`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle')}"></i> <span>${msg}</span>`;
             container.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
@@ -317,10 +354,36 @@
             }, 3000);
         }
 
+        // Persistent Dark Mode
+        function initTheme() {
+            const savedTheme = localStorage.getItem('framecraft_theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').className = "fa-solid fa-sun";
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('theme-icon').className = "fa-solid fa-moon";
+            }
+        }
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('framecraft_theme', isDark ? 'dark' : 'light');
             document.getElementById('theme-icon').className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon";
+        }
+        initTheme();
+
+        // Scroll to top button display logic
+        window.onscroll = function() {
+            const btn = document.getElementById('scroll-top-btn');
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                btn.classList.remove('hidden');
+            } else {
+                btn.classList.add('hidden');
+            }
+        };
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // --- UI & RENDER ENGINE ---
@@ -425,14 +488,27 @@
             handleSearch();
         }
 
-        // --- GALLERY MODAL ---
+        // --- SWIPEABLE GALLERY MODAL ---
         function openGallery(imgUrl) {
-            document.getElementById('gallery-image').src = imgUrl;
+            galleryImages = products.map(p => p.image);
+            galleryIndex = galleryImages.indexOf(imgUrl);
+            if(galleryIndex === -1) { galleryImages = [imgUrl]; galleryIndex = 0; }
+            document.getElementById('gallery-image').src = galleryImages[galleryIndex];
             document.getElementById('gallery-modal').classList.remove('hidden');
         }
         function toggleGallery() { document.getElementById('gallery-modal').classList.add('hidden'); }
+        function prevGalleryImage() {
+            if(galleryImages.length === 0) return;
+            galleryIndex = (galleryIndex - 1 + galleryImages.length) % galleryImages.length;
+            document.getElementById('gallery-image').src = galleryImages[galleryIndex];
+        }
+        function nextGalleryImage() {
+            if(galleryImages.length === 0) return;
+            galleryIndex = (galleryIndex + 1) % galleryImages.length;
+            document.getElementById('gallery-image').src = galleryImages[galleryIndex];
+        }
 
-        // --- CART ENGINE ---
+        // --- CART ENGINE & PROMO CODES ---
         function addToCart(productId) {
             const prod = products.find(p => p.id === productId);
             const sizeSelect = document.getElementById(`size-select-${productId}`);
@@ -450,6 +526,11 @@
             if (cartItemIndex > -1) cart[cartItemIndex].quantity += 1;
             else cart.push({ id: prod.id, title: prod.title, size: selectedSizeObj.label, price: selectedSizeObj.price, quantity: 1 });
 
+            // Trigger Shake Animation on Navbar Cart Button
+            const cartBtn = document.getElementById('cart-btn');
+            cartBtn.classList.add('shake-cart');
+            setTimeout(() => cartBtn.classList.remove('shake-cart'), 400);
+
             updateCartUI();
             showToast("Item added to cart!");
             toggleCartModal(true); 
@@ -459,6 +540,29 @@
             cart.splice(index, 1);
             updateCartUI();
             showToast("Item removed", "info");
+        }
+
+        function clearCart() {
+            if (cart.length === 0) return;
+            cart = [];
+            appliedDiscount = 0;
+            updateCartUI();
+            showToast("Cart cleared", "info");
+        }
+
+        function applyPromoCode() {
+            const code = document.getElementById('promo-input').value.trim().toUpperCase();
+            if (code === "DISCOUNT10") {
+                appliedDiscount = 10;
+                showToast("10% Discount Applied!", "success");
+            } else if (code === "FRAME20") {
+                appliedDiscount = 20;
+                showToast("20% Discount Applied!", "success");
+            } else {
+                appliedDiscount = 0;
+                showToast("Invalid Promo Code", "error");
+            }
+            updateCartUI();
         }
 
         function updateCartUI() {
@@ -491,11 +595,15 @@
                 });
             }
             
+            if (appliedDiscount > 0) {
+                total = Math.round(total * (1 - appliedDiscount / 100));
+            }
+
             const shippingFee = parseInt(document.querySelector('input[name="shipping"]:checked').value);
             total += shippingFee;
 
             cartCount.innerText = totalItems;
-            cartTotal.innerText = `₹${total}`;
+            cartTotal.innerText = `₹${total} ${appliedDiscount > 0 ? `(${appliedDiscount}% OFF)` : ''}`;
         }
 
         function toggleCartModal(openForce = false) {
@@ -509,14 +617,31 @@
             if (cart.length === 0) return showToast("Your cart is empty!", "error");
 
             const name = sanitize(document.getElementById('cust-name').value);
-            const phone = sanitize(document.getElementById('cust-phone').value);
+            // Strict Regex Phone Cleaning
+            const rawPhone = document.getElementById('cust-phone').value;
+            const phone = sanitize(rawPhone.replace(/\D/g, ''));
+            
+            if(phone.length !== 10) {
+                showToast("Please enter a valid 10-digit phone number", "error");
+                return;
+            }
+
+            // Frontend Stock Validation
+            for (let item of cart) {
+                const prod = products.find(p => p.id === item.id);
+                if (prod && prod.stock < item.quantity) {
+                    showToast(`Not enough stock for ${item.title}!`, "error");
+                    return;
+                }
+            }
+
             const address = sanitize(document.getElementById('cust-address').value);
             const customText = sanitize(document.getElementById('cust-custom-text').value) || "None";
             const orderId = Math.floor(1000 + Math.random() * 9000); 
             const deliveryOtp = Math.floor(1000 + Math.random() * 9000); 
             const shippingFee = parseInt(document.querySelector('input[name="shipping"]:checked').value);
 
-            let itemsFormatted = ""; let grandTotal = shippingFee;
+            let itemsFormatted = ""; let grandTotal = 0;
 
             cart.forEach((item, idx) => {
                 grandTotal += item.price * item.quantity;
@@ -527,6 +652,9 @@
                     products[dbProdIndex].stock -= item.quantity;
                 }
             });
+
+            if (appliedDiscount > 0) grandTotal = Math.round(grandTotal * (1 - appliedDiscount / 100));
+            grandTotal += shippingFee;
 
             localStorage.setItem('framecraft_db', JSON.stringify(products));
 
@@ -544,13 +672,14 @@
             window.open(`https://wa.me/${MY_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
 
             cart = [];
+            appliedDiscount = 0;
             updateCartUI();
             document.getElementById('checkout-form').reset();
             toggleCartModal(false);
-            renderProducts(products); // re-render to show updated stock
+            renderProducts(products);
         }
 
-        // --- ADMIN DASHBOARD ---
+        // --- ADMIN DASHBOARD & MULTIPLE VARIANTS ---
         let clickCount = 0; let clickTimer;
 
         function triggerAdmin() {
@@ -576,15 +705,30 @@
             document.getElementById(`admin-${tabName}-section`).classList.remove('hidden');
             document.getElementById(`tab-${tabName}`).className = "flex-1 py-3 px-4 font-bold text-amber-600 border-b-2 border-amber-600 transition whitespace-nowrap";
             
+            if(tabName === 'add' && document.getElementById('variant-builder-container').children.length === 0) {
+                addVariantField(); // default 1 field
+            }
             if(tabName === 'orders') renderAdminOrders('All');
             if(tabName === 'products') renderAdminProductList();
         }
 
-        // Dashboard Analytics & Render
+        // Multiple Variant Row Builder
+        function addVariantField(label = '', price = '') {
+            const container = document.getElementById('variant-builder-container');
+            const row = document.createElement('div');
+            row.className = "flex space-x-2 items-center variant-row";
+            row.innerHTML = `
+                <input type="text" placeholder="Size/Variant (e.g. 8x10)" value="${label}" required class="variant-label w-1/2 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
+                <input type="number" placeholder="Price (₹)" value="${price}" required class="variant-price w-1/2 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700 p-2"><i class="fa-solid fa-times"></i></button>
+            `;
+            container.appendChild(row);
+        }
+
+        // Dashboard Analytics & Manual Status Override
         function renderAdminOrders(filterStatus = 'All') {
             let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
             
-            // Calc Stats (Always on all orders)
             let rev = 0, pend = 0, deliv = 0;
             orders.forEach(o => {
                 if(o.status === 'Delivered') { rev += o.total; deliv++; }
@@ -594,7 +738,6 @@
             document.getElementById('stat-pending').innerText = pend;
             document.getElementById('stat-delivered').innerText = deliv;
 
-            // Apply Filter for View
             if(filterStatus !== 'All') orders = orders.filter(o => o.status === filterStatus);
 
             const container = document.getElementById('orders-list-container');
@@ -605,7 +748,12 @@
                     <div class="flex justify-between items-center border-b dark:border-gray-700 pb-2 mb-2">
                         <div>
                             <span class="font-extrabold text-slate-900 dark:text-white bg-amber-100 dark:bg-amber-900/50 px-2 py-1 rounded">Order #${order.id}</span>
-                            <span class="ml-2 px-2 py-0.5 text-xs font-bold rounded ${order.status === 'Delivered' ? 'bg-emerald-100 text-emerald-800' : 'bg-yellow-100 text-yellow-800'}">${order.status}</span>
+                            <select onchange="updateOrderStatus(${order.id}, this.value)" class="ml-2 px-2 py-0.5 text-xs font-bold rounded border dark:border-gray-600 dark:bg-gray-700">
+                                <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                                <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                            </select>
                         </div>
                         <div class="flex space-x-2">
                             <button onclick="downloadInvoice(${order.id})" class="text-blue-500 hover:text-blue-700" title="Generate PDF Receipt"><i class="fa-solid fa-file-pdf"></i></button>
@@ -618,7 +766,7 @@
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-900 p-2 rounded border dark:border-gray-700 mb-3">
                         <ul class="space-y-1">
-                            ${order.items.map(i => `<li class="flex justify-between text-xs text-gray-600 dark:text-gray-400"><span>${i.quantity}x ${i.title}</span> <span>₹${i.price * i.quantity}</span></li>`).join('')}
+                            ${order.items.map(i => `<li class="flex justify-between text-xs text-gray-600 dark:text-gray-400"><span>${i.quantity}x ${i.title} (${i.size})</span> <span>₹${i.price * i.quantity}</span></li>`).join('')}
                             ${order.shipping > 0 ? `<li class="flex justify-between text-xs text-gray-600 dark:text-gray-400 border-t pt-1"><span>Express Delivery</span> <span>₹${order.shipping}</span></li>` : ''}
                         </ul>
                         <div class="flex justify-between items-center border-t dark:border-gray-700 mt-2 pt-2">
@@ -634,6 +782,17 @@
                         </div>` : ''}
                 </div>
             `).join('');
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
+            const idx = orders.findIndex(o => o.id === orderId);
+            if(idx > -1) {
+                orders[idx].status = newStatus;
+                localStorage.setItem('framecraft_orders', JSON.stringify(orders));
+                showToast(`Order #${orderId} set to ${newStatus}`);
+                renderAdminOrders('All');
+            }
         }
 
         // CSV Export Logic
@@ -653,7 +812,7 @@
             link.remove();
         }
 
-        // PDF Invoice Generation Logic (Using html2pdf)
+        // PDF Invoice Generation with Error Handling
         function downloadInvoice(orderId) {
             showToast("Generating PDF Invoice...", "info");
             let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
@@ -694,10 +853,18 @@
             `;
             template.classList.remove('hidden');
             
-            html2pdf().set({ margin: 0.5, filename: `Invoice_${order.id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(template).save().then(() => {
+            try {
+                html2pdf().set({ margin: 0.5, filename: `Invoice_${order.id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(template).save().then(() => {
+                    template.classList.add('hidden');
+                    showToast("Invoice downloaded successfully!");
+                }).catch(err => {
+                    template.classList.add('hidden');
+                    showToast("Failed to generate PDF on this device", "error");
+                });
+            } catch (err) {
                 template.classList.add('hidden');
-                showToast("Invoice downloaded successfully!");
-            });
+                showToast("PDF generation exception", "error");
+            }
         }
 
         function verifyOrderOtp(orderId) {
@@ -722,15 +889,22 @@
             }
         }
 
+        // Manage items tab with Low Stock Alert
         function renderAdminProductList() {
             const container = document.getElementById('admin-products-list');
-            container.innerHTML = products.length === 0 ? `<p class="text-xs text-gray-400">No products available.</p>` : products.map(p => `
+            container.innerHTML = products.length === 0 ? `<p class="text-xs text-gray-400">No products available.</p>` : products.map(p => {
+                const stockVal = p.stock !== undefined ? p.stock : 10;
+                const isLowStock = stockVal < 3;
+                return `
                 <div class="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded-lg border dark:border-gray-700 text-xs shadow-sm">
                     <div class="flex items-center space-x-3">
                         <img src="${p.image}" class="w-10 h-10 object-cover rounded">
                         <div>
-                            <h4 class="font-bold text-gray-800 dark:text-gray-100">${p.title}</h4>
-                            <span class="text-amber-600">Stock: ${p.stock !== undefined ? p.stock : 10}</span>
+                            <h4 class="font-bold text-gray-800 dark:text-gray-100 flex items-center">
+                                ${p.title}
+                                ${isLowStock ? `<span class="ml-2 w-2 h-2 rounded-full bg-red-500 animate-ping" title="Low Stock Alert"></span>` : ''}
+                            </h4>
+                            <span class="${isLowStock ? 'text-red-500 font-bold' : 'text-amber-600'}">Stock: ${stockVal}</span>
                         </div>
                     </div>
                     <div class="flex space-x-2">
@@ -738,7 +912,7 @@
                         <button onclick="deleteProduct(${p.id}); renderAdminProductList();" class="bg-red-50 dark:bg-red-900/30 hover:bg-red-100 text-red-600 p-2 rounded-lg font-bold"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function deleteProduct(productId) {
@@ -758,9 +932,13 @@
             document.getElementById('admin-title').value = prod.title;
             document.getElementById('admin-category').value = prod.category;
             document.getElementById('admin-desc').value = prod.description;
-            document.getElementById('admin-size').value = prod.sizes[0].label;
-            document.getElementById('admin-price').value = prod.sizes[0].price;
             document.getElementById('admin-stock').value = prod.stock !== undefined ? prod.stock : 10;
+            
+            // Populate multiple variants dynamically
+            const container = document.getElementById('variant-builder-container');
+            container.innerHTML = '';
+            prod.sizes.forEach(s => addVariantField(s.label, s.price));
+
             document.getElementById('admin-submit-btn').innerHTML = `<i class="fa-solid fa-save mr-2"></i>Update Product`;
         }
 
@@ -774,7 +952,6 @@
             const imageFile = document.getElementById('admin-image').files[0];
             let imageUrl = "";
 
-            // Keep old image if editing and no new file uploaded
             if(editId && !imageFile) {
                 const existingProd = products.find(p => p.id == editId);
                 imageUrl = existingProd.image;
@@ -792,14 +969,31 @@
                 alert("Please select an image!"); btn.disabled = false; return;
             }
 
+            // Extract variant builder rows
+            const variantRows = document.querySelectorAll('.variant-row');
+            const sizesArr = [];
+            variantRows.forEach(row => {
+                const label = row.querySelector('.variant-label').value.trim();
+                const price = parseFloat(row.querySelector('.variant-price').value);
+                if(label && !isNaN(price)) {
+                    sizesArr.push({ label, price });
+                }
+            });
+
+            if(sizesArr.length === 0) {
+                alert("Please add at least one valid variant!");
+                btn.disabled = false;
+                return;
+            }
+
             const newProduct = {
                 id: editId ? parseInt(editId) : Date.now(),
-                title: document.getElementById('admin-title').value,
-                category: document.getElementById('admin-category').value,
-                description: document.getElementById('admin-desc').value,
+                title: sanitize(document.getElementById('admin-title').value),
+                category: sanitize(document.getElementById('admin-category').value),
+                description: sanitize(document.getElementById('admin-desc').value),
                 image: imageUrl,
                 stock: parseInt(document.getElementById('admin-stock').value),
-                sizes: [{ label: document.getElementById('admin-size').value || 'Standard', price: document.getElementById('admin-price').value }]
+                sizes: sizesArr
             };
 
             if(editId) {
@@ -818,14 +1012,16 @@
             // Reset form
             document.getElementById('add-product-form').reset();
             document.getElementById('admin-edit-id').value = "";
+            document.getElementById('variant-builder-container').innerHTML = '';
+            addVariantField();
             btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i>Save Product`;
             btn.disabled = false;
         }
 
         // Initialization
+        addVariantField();
         updateCartUI();
         renderProducts(products);
     </script>
 </body>
 </html>
-
