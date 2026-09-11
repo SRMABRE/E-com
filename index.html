@@ -63,6 +63,11 @@
                     <i id="theme-icon" class="fa-solid fa-moon"></i>
                 </button>
                 
+                <!-- Track Order Button -->
+                <button onclick="toggleTrackModal()" class="text-blue-400 hover:text-blue-500 transition text-xl relative" title="Track & Manage Orders">
+                    <i class="fa-solid fa-truck-fast"></i>
+                </button>
+
                 <!-- Wishlist Toggle -->
                 <button onclick="filterWishlist()" class="text-red-400 hover:text-red-500 transition text-xl relative">
                     <i class="fa-solid fa-heart"></i>
@@ -135,6 +140,26 @@
         <button onclick="prevGalleryImage()" class="absolute left-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10 bg-black/50 p-2 rounded-full"><i class="fa-solid fa-chevron-left"></i></button>
         <img id="gallery-image" src="" alt="Gallery" class="max-w-full max-h-[85vh] rounded-lg shadow-2xl object-contain">
         <button onclick="nextGalleryImage()" class="absolute right-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10 bg-black/50 p-2 rounded-full"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <!-- TRACK ORDER MODAL (NEW) -->
+    <div id="track-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+            <div class="bg-blue-600 p-4 flex justify-between items-center text-white">
+                <h2 class="text-lg font-bold"><i class="fa-solid fa-map-location-dot mr-2"></i> Track or Manage Order</h2>
+                <button onclick="toggleTrackModal()" class="text-white text-2xl font-bold hover:text-gray-200">&times;</button>
+            </div>
+            <div class="p-6 flex flex-col space-y-4">
+                <p class="text-xs text-gray-500 dark:text-gray-400">Enter your Order ID to check its current status or to request a cancellation.</p>
+                <div class="flex space-x-2">
+                    <input type="text" id="track-order-id" placeholder="Enter Order ID (e.g. 1234)" class="w-full p-2.5 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-sm focus:ring-2 focus:ring-blue-400 outline-none text-gray-800 dark:text-white">
+                    <button onclick="checkOrderStatus()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded text-sm transition shadow-sm">Search</button>
+                </div>
+                <div id="track-result-container" class="mt-2">
+                    <!-- Tracking results dynamically rendered here -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- SECRET ADMIN PANEL MODAL -->
@@ -227,13 +252,14 @@
                 </div>
 
                 <!-- Filters & Export -->
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex space-x-2">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                    <div class="flex space-x-2 flex-wrap gap-y-2">
                         <button onclick="renderAdminOrders('All')" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs font-bold hover:bg-gray-300 transition">All</button>
                         <button onclick="renderAdminOrders('Pending')" class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-bold hover:bg-yellow-200 transition">Pending</button>
                         <button onclick="renderAdminOrders('Processing')" class="px-3 py-1 bg-blue-100 text-blue-800 rounded text-xs font-bold hover:bg-blue-200 transition">Processing</button>
                         <button onclick="renderAdminOrders('Shipped')" class="px-3 py-1 bg-purple-100 text-purple-800 rounded text-xs font-bold hover:bg-purple-200 transition">Shipped</button>
                         <button onclick="renderAdminOrders('Delivered')" class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded text-xs font-bold hover:bg-emerald-200 transition">Delivered</button>
+                        <button onclick="renderAdminOrders('Cancelled')" class="px-3 py-1 bg-red-100 text-red-800 rounded text-xs font-bold hover:bg-red-200 transition">Cancelled</button>
                     </div>
                     <button onclick="exportOrdersCSV()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-bold flex items-center transition shadow-sm">
                         <i class="fa-solid fa-file-csv mr-1"></i> Export CSV
@@ -338,7 +364,6 @@
         let galleryIndex = 0;
 
         // --- UTILITY & SANITIZATION FUNCTIONS ---
-        // Robust input sanitization via DOMPurify
         const sanitize = (str) => DOMPurify.sanitize(str.trim());
         
         function showToast(msg, type = 'success') {
@@ -354,7 +379,6 @@
             }, 3000);
         }
 
-        // Persistent Dark Mode
         function initTheme() {
             const savedTheme = localStorage.getItem('framecraft_theme');
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -373,7 +397,6 @@
         }
         initTheme();
 
-        // Scroll to top button display logic
         window.onscroll = function() {
             const btn = document.getElementById('scroll-top-btn');
             if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
@@ -385,6 +408,98 @@
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // --- ORDER TRACKING & CANCELLATION ENGINE (NEW) ---
+        function toggleTrackModal() {
+            document.getElementById('track-modal').classList.toggle('hidden');
+            document.getElementById('track-result-container').innerHTML = ''; // Clear previous searches
+            document.getElementById('track-order-id').value = ''; 
+        }
+
+        function checkOrderStatus() {
+            const inputId = document.getElementById('track-order-id').value.trim();
+            const container = document.getElementById('track-result-container');
+            if(!inputId) {
+                container.innerHTML = '<p class="text-red-500 text-xs font-bold mt-2">Please enter a valid Order ID.</p>';
+                return;
+            }
+
+            let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
+            const order = orders.find(o => o.id.toString() === inputId);
+
+            if(!order) {
+                container.innerHTML = '<p class="text-red-500 text-xs font-bold mt-2">Order not found. Please double-check your Order ID.</p>';
+                return;
+            }
+
+            let statusColor = 'text-amber-500 bg-amber-100 dark:bg-amber-900/30';
+            if(order.status === 'Processing') statusColor = 'text-blue-500 bg-blue-100 dark:bg-blue-900/30';
+            if(order.status === 'Shipped') statusColor = 'text-purple-500 bg-purple-100 dark:bg-purple-900/30';
+            if(order.status === 'Delivered') statusColor = 'text-emerald-500 bg-emerald-100 dark:bg-emerald-900/30';
+            if(order.status === 'Cancelled') statusColor = 'text-red-500 bg-red-100 dark:bg-red-900/30';
+
+            // Only allow cancellation if pending or processing
+            let cancelBtnHtml = '';
+            if(order.status === 'Pending' || order.status === 'Processing') {
+                cancelBtnHtml = `
+                    <button onclick="cancelCustomerOrder(${order.id})" class="mt-4 w-full bg-red-50 dark:bg-red-900/20 hover:bg-red-600 hover:text-white text-red-600 border border-red-200 dark:border-red-800 font-bold py-2.5 rounded-lg text-xs transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-ban"></i> <span>Cancel This Order</span>
+                    </button>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="bg-gray-50 dark:bg-gray-900 p-5 rounded-xl border dark:border-gray-700 shadow-inner mt-4">
+                    <div class="flex justify-between items-center mb-3 border-b dark:border-gray-700 pb-3">
+                        <span class="font-black text-slate-900 dark:text-white text-lg">Order #${order.id}</span>
+                        <span class="font-bold text-xs uppercase px-3 py-1 rounded ${statusColor}">${order.status}</span>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm text-gray-600 dark:text-gray-300"><strong>Customer:</strong> ${order.name}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-300"><strong>Date Placed:</strong> ${order.date}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-300"><strong>Total Billed:</strong> ₹${order.total}</p>
+                    </div>
+                    ${cancelBtnHtml}
+                </div>
+            `;
+        }
+
+        function cancelCustomerOrder(orderId) {
+            if(!confirm("Are you sure you want to completely cancel this order?")) return;
+
+            let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
+            const idx = orders.findIndex(o => o.id === orderId);
+            
+            if(idx > -1) {
+                const order = orders[idx];
+                if(order.status === 'Shipped' || order.status === 'Delivered' || order.status === 'Cancelled') {
+                    showToast("Order cannot be cancelled at this stage.", "error");
+                    return;
+                }
+                
+                // 1. Update status to Cancelled
+                orders[idx].status = 'Cancelled';
+                localStorage.setItem('framecraft_orders', JSON.stringify(orders));
+                
+                // 2. Restore Stock into Database
+                order.items.forEach(item => {
+                    const dbProdIndex = products.findIndex(p => p.id === item.id);
+                    if(dbProdIndex > -1 && products[dbProdIndex].stock !== undefined) {
+                        products[dbProdIndex].stock += item.quantity;
+                    }
+                });
+                localStorage.setItem('framecraft_db', JSON.stringify(products));
+                renderProducts(products); // Refresh UI to show restocked items
+                
+                showToast("Order Cancelled Successfully!", "success");
+                checkOrderStatus(); // Refresh the tracking UI view
+                
+                // 3. Send WhatsApp alert to store owner
+                const msg = `⚠️ *ORDER CANCELLED* ⚠️\n\nCustomer *${order.name}* has successfully cancelled their order.\n\n*Order ID:* #${order.id}\n*Status update:* The items have been restocked automatically.\n\n_Please review this in your web dashboard._`;
+                window.open(`https://wa.me/${MY_WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+            }
+        }
+
 
         // --- UI & RENDER ENGINE ---
         function renderProducts(itemsToRender) {
@@ -732,7 +847,7 @@
             let rev = 0, pend = 0, deliv = 0;
             orders.forEach(o => {
                 if(o.status === 'Delivered') { rev += o.total; deliv++; }
-                else pend++;
+                else if (o.status !== 'Cancelled') pend++;
             });
             document.getElementById('stat-revenue').innerText = `₹${rev}`;
             document.getElementById('stat-pending').innerText = pend;
@@ -748,11 +863,12 @@
                     <div class="flex justify-between items-center border-b dark:border-gray-700 pb-2 mb-2">
                         <div>
                             <span class="font-extrabold text-slate-900 dark:text-white bg-amber-100 dark:bg-amber-900/50 px-2 py-1 rounded">Order #${order.id}</span>
-                            <select onchange="updateOrderStatus(${order.id}, this.value)" class="ml-2 px-2 py-0.5 text-xs font-bold rounded border dark:border-gray-600 dark:bg-gray-700">
+                            <select onchange="updateOrderStatus(${order.id}, this.value)" class="ml-2 px-2 py-0.5 text-xs font-bold rounded border dark:border-gray-600 dark:bg-gray-700 ${order.status === 'Cancelled' ? 'text-red-500' : ''}">
                                 <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
                                 <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
                                 <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
                                 <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
                             </select>
                         </div>
                         <div class="flex space-x-2">
@@ -788,6 +904,18 @@
             let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
             const idx = orders.findIndex(o => o.id === orderId);
             if(idx > -1) {
+                // If it wasn't cancelled before, and now admin marks it Cancelled, restore stock
+                if(orders[idx].status !== 'Cancelled' && newStatus === 'Cancelled') {
+                    orders[idx].items.forEach(item => {
+                        const dbProdIndex = products.findIndex(p => p.id === item.id);
+                        if(dbProdIndex > -1 && products[dbProdIndex].stock !== undefined) {
+                            products[dbProdIndex].stock += item.quantity;
+                        }
+                    });
+                    localStorage.setItem('framecraft_db', JSON.stringify(products));
+                    renderProducts(products); 
+                }
+
                 orders[idx].status = newStatus;
                 localStorage.setItem('framecraft_orders', JSON.stringify(orders));
                 showToast(`Order #${orderId} set to ${newStatus}`);
