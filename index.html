@@ -123,12 +123,12 @@
 
     <!-- TRACK ORDER MODAL -->
     <div id="track-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-800 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="bg-blue-600 p-4 flex justify-between items-center text-white">
                 <h2 class="text-lg font-bold"><i class="fa-solid fa-map-location-dot mr-2"></i> Track or Manage Order</h2>
                 <button onclick="toggleTrackModal()" class="text-white text-2xl font-bold hover:text-gray-200">&times;</button>
             </div>
-            <div class="p-6 flex flex-col space-y-4">
+            <div class="p-6 flex flex-col space-y-4 overflow-y-auto">
                 <p class="text-xs text-gray-500 dark:text-gray-400">Enter your Order ID to check status or request cancellation.</p>
                 <div class="flex space-x-2">
                     <input type="text" id="track-order-id" placeholder="Enter Order ID" class="w-full p-2.5 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-sm focus:ring-2 focus:ring-blue-400 outline-none text-gray-800 dark:text-white">
@@ -404,17 +404,57 @@
                 `;
             }
 
+            // Timeline Visual Builder
+            const history = order.trackingHistory || [
+                { status: "Pending", time: order.date, remark: "Order Placed Successfully" }
+            ];
+
+            const historyHtml = history.map((item, index) => {
+                let badgeColor = "bg-amber-500";
+                if(item.status === 'Processing') badgeColor = "bg-blue-500";
+                if(item.status === 'Shipped') badgeColor = "bg-purple-500";
+                if(item.status === 'Delivered') badgeColor = "bg-emerald-500";
+                if(item.status === 'Cancelled') badgeColor = "bg-red-500";
+
+                return `
+                    <div class="relative pl-6 pb-4 border-l-2 border-gray-200 dark:border-gray-700 last:border-l-0 last:pb-0">
+                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full ${badgeColor} border-2 border-white dark:border-gray-900"></div>
+                        <div class="text-xs">
+                            <span class="font-bold text-gray-800 dark:text-gray-100">${item.status}</span>
+                            <span class="text-[10px] text-gray-400 dark:text-gray-500 ml-2">${item.time}</span>
+                            <p class="text-gray-500 dark:text-gray-400 text-[11px] mt-0.5">${item.remark || ''}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const estimatedDateStr = order.estimatedDelivery || "3-5 Business Days";
+
             container.innerHTML = `
                 <div class="bg-gray-50 dark:bg-gray-900 p-5 rounded-xl border dark:border-gray-700 shadow-inner mt-4">
                     <div class="flex justify-between items-center mb-3 border-b dark:border-gray-700 pb-3">
                         <span class="font-black text-slate-900 dark:text-white text-lg">Order #${order.id}</span>
                         <span class="font-bold text-xs uppercase px-3 py-1 rounded ${statusColor}">${order.status}</span>
                     </div>
-                    <div class="space-y-1">
+                    <div class="space-y-1 mb-4">
                         <p class="text-sm text-gray-600 dark:text-gray-300"><strong>Customer:</strong> ${order.name}</p>
                         <p class="text-sm text-gray-600 dark:text-gray-300"><strong>Date Placed:</strong> ${order.date}</p>
                         <p class="text-sm text-gray-600 dark:text-gray-300"><strong>Total Billed:</strong> ₹${order.total}</p>
+                        ${order.status !== 'Cancelled' ? `
+                            <div class="mt-2 bg-blue-50 dark:bg-blue-900/30 p-2.5 rounded-lg border border-blue-200 dark:border-blue-800 flex items-center space-x-2">
+                                <i class="fa-solid fa-calendar-day text-blue-600 dark:text-blue-400"></i>
+                                <span class="text-xs font-bold text-blue-800 dark:text-blue-300">Estimated Delivery: ${estimatedDateStr}</span>
+                            </div>
+                        ` : ''}
                     </div>
+
+                    <div class="mt-4 border-t dark:border-gray-700 pt-3">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Order Timeline</h4>
+                        <div class="space-y-1">
+                            ${historyHtml}
+                        </div>
+                    </div>
+
                     ${cancelBtnHtml}
                 </div>
             `;
@@ -434,6 +474,13 @@
                 }
                 
                 orders[idx].status = 'Cancelled';
+                if(!orders[idx].trackingHistory) orders[idx].trackingHistory = [];
+                orders[idx].trackingHistory.push({
+                    status: 'Cancelled',
+                    time: new Date().toLocaleString(),
+                    remark: 'Cancelled by Customer'
+                });
+
                 localStorage.setItem('framecraft_orders', JSON.stringify(orders));
                 
                 order.items.forEach(item => {
@@ -717,9 +764,19 @@
 
             localStorage.setItem('framecraft_db', JSON.stringify(products));
 
+            // Estimate Delivery (Current Date + 5 Days)
+            const estDate = new Date();
+            estDate.setDate(estDate.getDate() + 5);
+            const estDateFormatted = estDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            const orderDateFormatted = new Date().toLocaleString();
+
             const newOrder = {
-                id: orderId, date: new Date().toLocaleString(), name, phone, address, note: customText,
-                items: [...cart], shipping: shippingFee, total: grandTotal, otp: deliveryOtp, status: "Pending"
+                id: orderId, date: orderDateFormatted, name, phone, address, note: customText,
+                items: [...cart], shipping: shippingFee, total: grandTotal, otp: deliveryOtp, status: "Pending",
+                estimatedDelivery: estDateFormatted,
+                trackingHistory: [
+                    { status: "Pending", time: orderDateFormatted, remark: "Order Placed Successfully" }
+                ]
             };
             
             let savedOrders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
@@ -727,7 +784,7 @@
             localStorage.setItem('framecraft_orders', JSON.stringify(savedOrders));
 
             // READONLY UNEDITABLE GENERATED TEXT LINK
-            const message = `🛒 *NEW ORDER #${orderId}*\n\n👤 *Customer Details:*\n- *Name:* ${name}\n- *Phone:* ${phone}\n- *Address:* ${address}\n\n📦 *Items Ordered:*\n${itemsFormatted}🚚 *Shipping:* ${shippingFee === 0 ? 'Standard (Free)' : 'Express (+₹50)'}\n📝 *Customization:*\n"${customText}"\n\n💰 *Total Amount:* ₹${grandTotal}\n\n🔐 *Delivery Secret OTP:* *${deliveryOtp}*`;
+            const message = `🛒 *NEW ORDER #${orderId}*\n\n👤 *Customer Details:*\n- *Name:* ${name}\n- *Phone:* ${phone}\n- *Address:* ${address}\n\n📦 *Items Ordered:*\n${itemsFormatted}🚚 *Shipping:* ${shippingFee === 0 ? 'Standard (Free)' : 'Express (+₹50)'}\n📝 *Customization:*\n"${customText}"\n\n💰 *Total Amount:* ₹${grandTotal}\n📅 *Estimated Delivery:* ${estDateFormatted}\n🔐 *Delivery Secret OTP:* *${deliveryOtp}*`;
 
             window.open(`https://wa.me/${MY_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
 
@@ -851,6 +908,25 @@
                 }
 
                 orders[idx].status = newStatus;
+
+                if(!orders[idx].trackingHistory) {
+                    orders[idx].trackingHistory = [
+                        { status: "Pending", time: orders[idx].date, remark: "Order Placed Successfully" }
+                    ];
+                }
+
+                let statusRemark = "Order status updated";
+                if(newStatus === 'Processing') statusRemark = "Items undergoing customization & preparation";
+                if(newStatus === 'Shipped') statusRemark = "Handed over to courier / Dispatched";
+                if(newStatus === 'Delivered') statusRemark = "Package successfully delivered";
+                if(newStatus === 'Cancelled') statusRemark = "Order cancelled";
+
+                orders[idx].trackingHistory.push({
+                    status: newStatus,
+                    time: new Date().toLocaleString(),
+                    remark: statusRemark
+                });
+
                 localStorage.setItem('framecraft_orders', JSON.stringify(orders));
                 showToast(`Order #${orderId} set to ${newStatus}`);
                 renderAdminOrders('All');
