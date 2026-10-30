@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FrameCraft - Personalized Frames & Gifts</title>
+    <title>FARMORA - Frame Your Memories, Beautify Your Spaces</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -40,32 +40,55 @@
             40%, 80% { transform: scale(1.15) rotate(5deg); }
         }
         .shake-cart { animation: cartShake 0.4s ease-in-out; }
+
+        @keyframes floatBanner {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .banner-float { animation: floatBanner 4s ease-in-out infinite; }
+
+        @keyframes shimmerGold {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .gold-shimmer {
+            background: linear-gradient(90deg, #d97706 0%, #fbbf24 50%, #d97706 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            animation: shimmerGold 4s linear infinite;
+        }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 font-sans text-gray-800 dark:text-gray-100 antialiased transition-colors duration-300">
 
     <!-- NAVIGATION BAR -->
-    <header class="sticky top-0 z-40 bg-slate-900 text-white shadow-md">
+    <header class="sticky top-0 z-40 bg-slate-900 border-b border-amber-500/30 text-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2 cursor-pointer prevent-zoom" onclick="triggerAdmin()" title="Secret Admin Trigger">
-                <i class="fa-solid fa-gift text-amber-400 text-2xl"></i>
-                <span class="text-2xl font-extrabold tracking-wide text-white">Frame<span class="text-amber-400">Craft</span></span>
+            <div class="flex items-center space-x-3 cursor-pointer prevent-zoom" onclick="triggerAdmin()" title="Secret Admin Trigger">
+                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center shadow-md border-2 border-amber-300">
+                    <i class="fa-solid fa-gem text-slate-900 text-lg"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-black tracking-wider text-white">FAR<span class="gold-shimmer">MORA</span></span>
+                    <p class="text-[9px] tracking-widest uppercase text-amber-400 font-semibold -mt-1">Frame Your Memories</p>
+                </div>
             </div>
             
-            <div class="flex items-center space-x-4">
-                <button onclick="toggleDarkMode()" class="text-gray-300 hover:text-white transition text-xl">
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <button onclick="toggleDarkMode()" class="text-gray-300 hover:text-amber-400 transition text-xl p-2">
                     <i id="theme-icon" class="fa-solid fa-moon"></i>
                 </button>
-                <button onclick="toggleTrackModal()" class="text-blue-400 hover:text-blue-500 transition text-xl relative" title="Track & Manage Orders">
+                <button onclick="toggleTrackModal()" class="text-blue-400 hover:text-blue-300 transition text-xl p-2 relative" title="Track & Manage Orders">
                     <i class="fa-solid fa-truck-fast"></i>
                 </button>
-                <button onclick="filterWishlist()" class="text-red-400 hover:text-red-500 transition text-xl relative">
+                <button onclick="filterWishlist()" class="text-red-400 hover:text-red-300 transition text-xl p-2 relative" title="Saved Favorites">
                     <i class="fa-solid fa-heart"></i>
                 </button>
-                <button id="cart-btn" onclick="toggleCartModal()" class="relative bg-amber-500 hover:bg-amber-600 text-slate-900 px-4 py-2 rounded-lg font-bold flex items-center space-x-2 transition">
-                    <i class="fa-solid fa-cart-shopping text-lg"></i>
-                    <span class="hidden sm:inline">Cart</span>
-                    <span id="cart-count" class="bg-slate-900 text-amber-400 text-xs px-2 py-0.5 rounded-full font-extrabold">0</span>
+                <button id="cart-btn" onclick="toggleCartModal()" class="relative bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 px-4 py-2 rounded-xl font-extrabold flex items-center space-x-2 shadow-lg transition transform active:scale-95">
+                    <i class="fa-solid fa-bag-shopping text-base"></i>
+                    <span class="hidden sm:inline">Bag</span>
+                    <span id="cart-count" class="bg-slate-900 text-amber-400 text-xs px-2 py-0.5 rounded-full font-black shadow">0</span>
                 </button>
             </div>
         </div>
@@ -73,52 +96,78 @@
 
     <!-- MAIN CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 py-6 min-h-screen">
-        <div class="bg-gradient-to-r from-slate-900 to-indigo-900 text-white rounded-2xl p-6 sm:p-10 mb-8 shadow-lg relative overflow-hidden">
-            <div class="relative z-10 max-w-xl">
-                <span class="bg-amber-400 text-slate-900 text-xs font-black uppercase px-2.5 py-1 rounded">Customized Gifts</span>
-                <h1 class="text-3xl sm:text-5xl font-extrabold mt-2 leading-tight">Turn Memories Into Forever Gifts</h1>
-                <p class="text-gray-300 text-sm sm:text-base mt-2">Order premium customized photo frames, mugs, and unique gifts directly via WhatsApp.</p>
+        <!-- HERO BANNER -->
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-12 mb-10 shadow-2xl relative overflow-hidden border border-amber-500/20 banner-float">
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl text-amber-400 pointer-events-none">
+                <i class="fa-solid fa-photo-film"></i>
+            </div>
+            <div class="relative z-10 max-w-2xl">
+                <span class="bg-amber-400/20 border border-amber-400 text-amber-300 text-xs font-black uppercase px-3 py-1.5 rounded-full tracking-wider backdrop-blur-sm">~ FARMORA Signature Collection</span>
+                <h1 class="text-3xl sm:text-6xl font-black mt-3 leading-tight tracking-tight">Frame Your Memories, <span class="gold-shimmer">Beautify Your Spaces</span></h1>
+                <p class="text-gray-300 text-sm sm:text-base mt-3 leading-relaxed">Discover exquisite handcrafted frames, personalized gifts, and magical memories designed for your loved ones.</p>
             </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <!-- HIGHLIGHTED FEATURED ANIMATED CAROUSEL BAR -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-3 px-1">
+                <h2 class="text-sm font-extrabold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center">
+                    <i class="fa-solid fa-fire text-amber-500 mr-2 animate-bounce"></i> Trending & Featured Creations
+                </h2>
+                <span class="text-xs text-amber-600 dark:text-amber-400 font-bold">Swipe / Scroll</span>
+            </div>
+            <div id="featured-carousel" class="flex space-x-4 overflow-x-auto pb-4 no-scrollbar scroll-smooth">
+                <!-- Dynamically populated featured items -->
+            </div>
+        </div>
+
+        <!-- SEARCH & CATEGORIES -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border dark:border-gray-700">
             <div class="flex items-center space-x-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto no-scrollbar" id="category-container">
-                <button onclick="filterCategory('All')" class="category-btn bg-amber-500 text-slate-900 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap shadow-sm">All Items</button>
-                <button onclick="filterCategory('Wooden Frames')" class="category-btn bg-white dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-full text-sm font-medium border whitespace-nowrap">Wooden Frames</button>
-                <button onclick="filterCategory('Acrylic Frames')" class="category-btn bg-white dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-full text-sm font-medium border whitespace-nowrap">Acrylic Frames</button>
-                <button onclick="filterCategory('Magic Mugs')" class="category-btn bg-white dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-full text-sm font-medium border whitespace-nowrap">Magic Mugs</button>
+                <button onclick="filterCategory('All')" class="category-btn bg-amber-500 text-slate-900 px-5 py-2.5 rounded-xl text-sm font-black whitespace-nowrap shadow-md transition">All Collections</button>
+                <button onclick="filterCategory('Wooden Frames')" class="category-btn bg-gray-100 dark:bg-gray-700 hover:bg-amber-100 text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition">Wooden Frames</button>
+                <button onclick="filterCategory('Acrylic Frames')" class="category-btn bg-gray-100 dark:bg-gray-700 hover:bg-amber-100 text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition">Acrylic Frames</button>
+                <button onclick="filterCategory('Magic Mugs')" class="category-btn bg-gray-100 dark:bg-gray-700 hover:bg-amber-100 text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition">Magic Mugs</button>
+                <button onclick="filterCategory('Other Gifts')" class="category-btn bg-gray-100 dark:bg-gray-700 hover:bg-amber-100 text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition">Other Gifts</button>
             </div>
             
-            <div class="relative w-full sm:w-64">
-                <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400"></i>
-                <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Search products..." class="w-full pl-9 pr-4 py-2 border dark:border-gray-700 rounded-full bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-amber-400 outline-none transition text-gray-700 dark:text-gray-200">
+            <div class="relative w-full sm:w-72">
+                <i class="fa-solid fa-search absolute left-4 top-3 text-gray-400"></i>
+                <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Search frames, gifts..." class="w-full pl-10 pr-4 py-2.5 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none transition text-gray-800 dark:text-white font-medium">
             </div>
         </div>
 
+        <!-- PRODUCT GRID -->
         <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
     </main>
 
-    <button id="scroll-top-btn" onclick="scrollToTop()" class="fixed bottom-6 left-6 z-40 bg-amber-500 hover:bg-amber-600 text-slate-900 p-3 rounded-full shadow-lg hidden transition-opacity duration-300">
+    <button id="scroll-top-btn" onclick="scrollToTop()" class="fixed bottom-6 left-6 z-40 bg-amber-500 hover:bg-amber-600 text-slate-900 p-3.5 rounded-full shadow-2xl hidden transition-all duration-300">
         <i class="fa-solid fa-arrow-up text-lg"></i>
     </button>
 
-    <footer class="bg-slate-900 text-gray-400 py-8 text-center text-sm border-t border-slate-800">
-        <p class="font-bold text-white mb-2">FrameCraft Gifting Store</p>
-        <p>Premium customized products tailored for your loved ones.</p>
-        <div class="mt-4 flex justify-center space-x-4">
-            <a href="#" class="hover:text-amber-400 transition"><i class="fa-brands fa-instagram text-xl"></i></a>
-            <a href="#" class="hover:text-amber-400 transition"><i class="fa-brands fa-facebook text-xl"></i></a>
+    <footer class="bg-slate-900 text-gray-400 py-10 text-center text-sm border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-xl font-black text-white tracking-widest mb-1">FAR<span class="text-amber-400">MORA</span></h2>
+            <p class="text-xs tracking-wider uppercase text-amber-500/80 font-bold mb-4">~ Frame Your Memories, Beautify Your Spaces ~</p>
+            <p class="text-xs max-w-md mx-auto mb-6 text-gray-400">Premium customized photo frames, magic mugs, and everlasting gifts crafted with absolute precision.</p>
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="#" class="hover:text-amber-400 transition text-xl"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="hover:text-amber-400 transition text-xl"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#" class="hover:text-amber-400 transition text-xl"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+            <div class="border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; <span id="year"></span> FARMORA. All Rights Reserved.</p>
+                <p class="mt-2 sm:mt-0 font-semibold text-amber-400">Engineered with ❤️ for Naveed ~ FARMORA</p>
+            </div>
         </div>
-        <p class="mt-4 text-xs opacity-50">&copy; <span id="year"></span> FrameCraft. All Rights Reserved.</p>
-        <p class="mt-2 text-xs font-semibold text-amber-400/80">Engineered by Syed Mautasim Billah</p>
     </footer>
 
     <!-- GALLERY MODAL -->
     <div id="gallery-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4">
         <button onclick="toggleGallery()" class="absolute top-4 right-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10">&times;</button>
-        <button onclick="prevGalleryImage()" class="absolute left-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10 bg-black/50 p-2 rounded-full"><i class="fa-solid fa-chevron-left"></i></button>
-        <img id="gallery-image" src="" alt="Gallery" class="max-w-full max-h-[85vh] rounded-lg shadow-2xl object-contain">
-        <button onclick="nextGalleryImage()" class="absolute right-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10 bg-black/50 p-2 rounded-full"><i class="fa-solid fa-chevron-right"></i></button>
+        <button onclick="prevGalleryImage()" class="absolute left-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10 bg-black/50 p-3 rounded-full"><i class="fa-solid fa-chevron-left"></i></button>
+        <img id="gallery-image" src="" alt="Gallery" class="max-w-full max-h-[85vh] rounded-2xl shadow-2xl object-contain border border-gray-700">
+        <button onclick="nextGalleryImage()" class="absolute right-4 text-white text-3xl font-bold hover:text-amber-400 transition z-10 bg-black/50 p-3 rounded-full"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
 
     <!-- TRACK ORDER MODAL -->
@@ -129,10 +178,10 @@
                 <button onclick="toggleTrackModal()" class="text-white text-2xl font-bold hover:text-gray-200">&times;</button>
             </div>
             <div class="p-6 flex flex-col space-y-4 overflow-y-auto">
-                <p class="text-xs text-gray-500 dark:text-gray-400">Enter your Order ID to check status or request cancellation.</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Enter your Order ID to check status, timeline or request cancellation.</p>
                 <div class="flex space-x-2">
-                    <input type="text" id="track-order-id" placeholder="Enter Order ID" class="w-full p-2.5 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-sm focus:ring-2 focus:ring-blue-400 outline-none text-gray-800 dark:text-white">
-                    <button onclick="checkOrderStatus()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded text-sm transition shadow-sm">Search</button>
+                    <input type="text" id="track-order-id" placeholder="Enter Order ID" class="w-full p-2.5 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm focus:ring-2 focus:ring-blue-400 outline-none text-gray-800 dark:text-white">
+                    <button onclick="checkOrderStatus()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl text-sm transition shadow-sm">Search</button>
                 </div>
                 <div id="track-result-container" class="mt-2"></div>
             </div>
@@ -143,19 +192,19 @@
     <div id="admin-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="bg-amber-500 p-4 flex justify-between items-center text-slate-900">
-                <h2 class="text-xl font-bold"><i class="fa-solid fa-lock mr-2"></i>Owner Dashboard</h2>
+                <h2 class="text-xl font-extrabold"><i class="fa-solid fa-lock mr-2"></i>FARMORA Owner Dashboard</h2>
                 <button onclick="toggleAdminModal()" class="text-slate-900 text-2xl font-bold">&times;</button>
             </div>
 
             <div class="flex border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm overflow-x-auto no-scrollbar">
                 <button onclick="switchAdminTab('add')" id="tab-add" class="flex-1 py-3 px-4 font-bold text-amber-600 border-b-2 border-amber-600 transition whitespace-nowrap">
-                    <i class="fa-solid fa-plus mr-1"></i> Add/Edit
+                    <i class="fa-solid fa-plus mr-1"></i> Add / Edit Item
                 </button>
                 <button onclick="switchAdminTab('orders')" id="tab-orders" class="flex-1 py-3 px-4 font-bold text-gray-500 dark:text-gray-400 hover:text-amber-600 transition whitespace-nowrap">
                     <i class="fa-solid fa-box-open mr-1"></i> Orders Dashboard
                 </button>
                 <button onclick="switchAdminTab('products')" id="tab-products" class="flex-1 py-3 px-4 font-bold text-gray-500 dark:text-gray-400 hover:text-amber-600 transition whitespace-nowrap">
-                    <i class="fa-solid fa-store mr-1"></i> Manage Items
+                    <i class="fa-solid fa-store mr-1"></i> Manage Inventory
                 </button>
             </div>
             
@@ -165,11 +214,11 @@
                     <input type="hidden" id="admin-edit-id">
                     <div>
                         <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Product Name</label>
-                        <input type="text" id="admin-title" placeholder="e.g. Couple Watch Set" required class="w-full mt-1 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
+                        <input type="text" id="admin-title" placeholder="e.g. Royal Couple Wooden Frame" required class="w-full mt-1 p-2.5 border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Category</label>
-                        <select id="admin-category" class="w-full mt-1 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
+                        <select id="admin-category" class="w-full mt-1 p-2.5 border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
                             <option value="Wooden Frames">Wooden Frames</option>
                             <option value="Acrylic Frames">Acrylic Frames</option>
                             <option value="Magic Mugs">Magic Mugs</option>
@@ -178,29 +227,29 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Description</label>
-                        <textarea id="admin-desc" rows="2" placeholder="Product details..." required class="w-full mt-1 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none"></textarea>
+                        <textarea id="admin-desc" rows="2" placeholder="Exquisite description of the product..." required class="w-full mt-1 p-2.5 border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none"></textarea>
                     </div>
                     
                     <div>
                         <div class="flex justify-between items-center mb-1">
                             <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Product Variants (Size & Price)</label>
-                            <button type="button" onclick="addVariantField()" class="text-xs bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-2 py-0.5 rounded"><i class="fa-solid fa-plus mr-1"></i>Add Variant</button>
+                            <button type="button" onclick="addVariantField()" class="text-xs bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-3 py-1 rounded-lg"><i class="fa-solid fa-plus mr-1"></i>Add Variant</button>
                         </div>
                         <div id="variant-builder-container" class="space-y-2"></div>
                     </div>
 
                     <div class="w-full">
-                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Stock Qty</label>
-                        <input type="number" id="admin-stock" placeholder="10" required class="w-full mt-1 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Stock Quantity</label>
+                        <input type="number" id="admin-stock" placeholder="20" required class="w-full mt-1 p-2.5 border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
                     </div>
                     
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Upload Product Image (Leave empty to keep existing on Edit)</label>
-                        <input type="file" id="admin-image" accept="image/*" class="w-full mt-1 p-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Upload Product Image (Cloud & Base64 Support)</label>
+                        <input type="file" id="admin-image" accept="image/*" class="w-full mt-1 p-2.5 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
                     </div>
 
-                    <button type="submit" id="admin-submit-btn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-lg text-sm transition mt-4">
-                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i>Save Product
+                    <button type="submit" id="admin-submit-btn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-sm transition mt-4 shadow-md">
+                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i>Save & Publish Globally
                     </button>
                 </form>
             </div>
@@ -224,14 +273,14 @@
 
                 <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                     <div class="flex space-x-2 flex-wrap gap-y-2">
-                        <button onclick="renderAdminOrders('All')" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs font-bold hover:bg-gray-300 transition">All</button>
-                        <button onclick="renderAdminOrders('Pending')" class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-bold hover:bg-yellow-200 transition">Pending</button>
-                        <button onclick="renderAdminOrders('Processing')" class="px-3 py-1 bg-blue-100 text-blue-800 rounded text-xs font-bold hover:bg-blue-200 transition">Processing</button>
-                        <button onclick="renderAdminOrders('Shipped')" class="px-3 py-1 bg-purple-100 text-purple-800 rounded text-xs font-bold hover:bg-purple-200 transition">Shipped</button>
-                        <button onclick="renderAdminOrders('Delivered')" class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded text-xs font-bold hover:bg-emerald-200 transition">Delivered</button>
-                        <button onclick="renderAdminOrders('Cancelled')" class="px-3 py-1 bg-red-100 text-red-800 rounded text-xs font-bold hover:bg-red-200 transition">Cancelled</button>
+                        <button onclick="renderAdminOrders('All')" class="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 rounded-lg text-xs font-bold hover:bg-gray-300 transition">All</button>
+                        <button onclick="renderAdminOrders('Pending')" class="px-3 py-1.5 bg-yellow-100 text-yellow-800 rounded-lg text-xs font-bold hover:bg-yellow-200 transition">Pending</button>
+                        <button onclick="renderAdminOrders('Processing')" class="px-3 py-1.5 bg-blue-100 text-blue-800 rounded-lg text-xs font-bold hover:bg-blue-200 transition">Processing</button>
+                        <button onclick="renderAdminOrders('Shipped')" class="px-3 py-1.5 bg-purple-100 text-purple-800 rounded-lg text-xs font-bold hover:bg-purple-200 transition">Shipped</button>
+                        <button onclick="renderAdminOrders('Delivered')" class="px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold hover:bg-emerald-200 transition">Delivered</button>
+                        <button onclick="renderAdminOrders('Cancelled')" class="px-3 py-1.5 bg-red-100 text-red-800 rounded-lg text-xs font-bold hover:bg-red-200 transition">Cancelled</button>
                     </div>
-                    <button onclick="exportOrdersCSV()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-bold flex items-center transition shadow-sm">
+                    <button onclick="exportOrdersCSV()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center transition shadow-sm">
                         <i class="fa-solid fa-file-csv mr-1"></i> Export CSV
                     </button>
                 </div>
@@ -241,7 +290,7 @@
 
             <!-- TAB 3: MANAGE PRODUCTS -->
             <div id="admin-products-section" class="p-6 overflow-y-auto hidden bg-gray-50 dark:bg-gray-900 flex-1">
-                <h3 class="text-xs font-bold text-gray-500 uppercase mb-3">Inventory Management</h3>
+                <h3 class="text-xs font-bold text-gray-500 uppercase mb-3">Inventory Management (Global Sync)</h3>
                 <div id="admin-products-list" class="space-y-3"></div>
             </div>
         </div>
@@ -253,7 +302,7 @@
             <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
                 <h2 class="text-lg font-bold"><i class="fa-solid fa-bag-shopping text-amber-400 mr-2"></i> Your Shopping Bag</h2>
                 <div class="flex items-center space-x-3">
-                    <button onclick="clearCart()" class="text-xs bg-red-600/80 hover:bg-red-600 text-white px-2 py-1 rounded flex items-center gap-1 transition"><i class="fa-solid fa-trash"></i> Empty</button>
+                    <button onclick="clearCart()" class="text-xs bg-red-600/80 hover:bg-red-600 text-white px-2.5 py-1 rounded-lg flex items-center gap-1 transition"><i class="fa-solid fa-trash"></i> Empty</button>
                     <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
                 </div>
             </div>
@@ -262,8 +311,8 @@
 
             <div class="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-900 space-y-3">
                 <div class="flex space-x-2">
-                    <input type="text" id="promo-input" placeholder="Promo Code (e.g. DISCOUNT10)" class="uppercase text-xs p-2 border dark:border-gray-700 rounded flex-1 bg-white dark:bg-gray-800 outline-none">
-                    <button onclick="applyPromoCode()" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-xs font-bold px-3 py-2 rounded transition">Apply</button>
+                    <input type="text" id="promo-input" placeholder="Promo Code (e.g. DISCOUNT10)" class="uppercase text-xs p-2.5 border dark:border-gray-700 rounded-xl flex-1 bg-white dark:bg-gray-800 outline-none">
+                    <button onclick="applyPromoCode()" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-xs font-bold px-4 py-2.5 rounded-xl transition">Apply</button>
                 </div>
 
                 <div class="flex space-x-4 mb-2 text-xs font-medium dark:text-gray-300">
@@ -279,16 +328,16 @@
 
                 <div class="flex justify-between font-bold text-gray-800 dark:text-white text-base">
                     <span>Total Amount:</span>
-                    <span id="cart-total" class="text-amber-600">₹0</span>
+                    <span id="cart-total" class="text-amber-600 font-black">₹0</span>
                 </div>
 
-                <form id="checkout-form" onsubmit="handleWhatsAppOrder(event)" class="space-y-2">
-                    <input type="text" id="cust-name" placeholder="Full Name *" required class="w-full text-xs p-2.5 border dark:border-gray-700 rounded bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none">
-                    <input type="tel" id="cust-phone" pattern="[0-9]{10}" title="Please enter exactly 10 digits" placeholder="WhatsApp Number (10 Digits) *" required class="w-full text-xs p-2.5 border dark:border-gray-700 rounded bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none">
-                    <textarea id="cust-address" placeholder="Complete Delivery Address *" rows="2" required class="w-full text-xs p-2.5 border dark:border-gray-700 rounded bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none"></textarea>
-                    <textarea id="cust-custom-text" placeholder="Customization details (e.g. Text/Name to print)" rows="2" class="w-full text-xs p-2.5 border dark:border-amber-900 rounded focus:ring-2 focus:ring-amber-400 outline-none bg-amber-50 dark:bg-amber-900/20"></textarea>
+                <form id="checkout-form" onsubmit="handleWhatsAppOrder(event)" class="space-y-2.5">
+                    <input type="text" id="cust-name" placeholder="Full Name *" required class="w-full text-xs p-3 border dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none">
+                    <input type="tel" id="cust-phone" pattern="[0-9]{10}" title="Please enter exactly 10 digits" placeholder="WhatsApp Number (10 Digits) *" required class="w-full text-xs p-3 border dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none">
+                    <textarea id="cust-address" placeholder="Complete Delivery Address *" rows="2" required class="w-full text-xs p-3 border dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none"></textarea>
+                    <textarea id="cust-custom-text" placeholder="Customization details (e.g. Text/Name/Photo theme to print)" rows="2" class="w-full text-xs p-3 border dark:border-amber-900 rounded-xl focus:ring-2 focus:ring-amber-400 outline-none bg-amber-50 dark:bg-amber-900/20"></textarea>
 
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg flex items-center justify-center space-x-2 shadow-md transition">
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-lg transition transform active:scale-95 text-sm">
                         <i class="fa-brands fa-whatsapp text-xl"></i>
                         <span>Place Order via WhatsApp</span>
                     </button>
@@ -308,14 +357,16 @@
         const IMGBB_API_KEY = "1e327a3c3d5e278f2cb6ed311e92d6e3"; 
 
         const defaultProducts = [
-            { id: 101, title: "Personalized Wooden Frame", category: "Wooden Frames", description: "High quality teak wood finish photo frame.", sizes: [ { label: "8x10 Inch", price: 399 }, { label: "12x18 Inch", price: 599 } ], image: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=500&q=80", stock: 15 },
-            { id: 102, title: "Glossy Acrylic Photo Frame", category: "Acrylic Frames", description: "Modern frameless 3mm thick glossy acrylic.", sizes: [ { label: "8x12 Inch", price: 499 }, { label: "12x18 Inch", price: 799 } ], image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&q=80", stock: 10 },
-            { id: 103, title: "Custom Magic Coffee Mug", category: "Magic Mugs", description: "Black mug reveals photo when hot liquid poured.", sizes: [ { label: "Standard 325ml", price: 299 } ], image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80", stock: 0 }
+            { id: 101, title: "FARMORA Royal Wooden Frame", category: "Wooden Frames", description: "High quality teak wood finish photo frame with golden highlights.", sizes: [ { label: "8x10 Inch", price: 399 }, { label: "12x18 Inch", price: 599 } ], image: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=500&q=80", stock: 15 },
+            { id: 102, title: "FARMORA Glossy Acrylic Frame", category: "Acrylic Frames", description: "Modern frameless 3mm thick glossy acrylic with stand.", sizes: [ { label: "8x12 Inch", price: 499 }, { label: "12x18 Inch", price: 799 } ], image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&q=80", stock: 10 },
+            { id: 103, title: "FARMORA Magic Coffee Mug", category: "Magic Mugs", description: "Black magic mug reveals custom photo when hot liquid is poured.", sizes: [ { label: "Standard 325ml", price: 299 } ], image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80", stock: 25 },
+            { id: 104, title: "FARMORA Couple LED Lamp", category: "Other Gifts", description: "Custom engraved acrylic LED lamp with multi-color base.", sizes: [ { label: "Standard Size", price: 699 }, { label: "Large Size", price: 999 } ], image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&q=80", stock: 8 }
         ];
 
-        let products = JSON.parse(localStorage.getItem('framecraft_db')) || defaultProducts;
-        let cart = JSON.parse(localStorage.getItem('framecraft_cart')) || [];
-        let wishlist = JSON.parse(localStorage.getItem('framecraft_wishlist')) || [];
+        // Global LocalStorage Database Synchronization
+        let products = JSON.parse(localStorage.getItem('farm_global_db')) || defaultProducts;
+        let cart = JSON.parse(localStorage.getItem('farm_cart')) || [];
+        let wishlist = JSON.parse(localStorage.getItem('farm_wishlist')) || [];
         let currentFilter = 'All';
         let showWishlistOnly = false;
         let appliedDiscount = 0;
@@ -327,7 +378,7 @@
         function showToast(msg, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = `toast-animate pointer-events-auto px-4 py-3 rounded-lg shadow-xl text-sm font-bold text-white flex items-center space-x-2 ${type === 'success' ? 'bg-emerald-500' : (type === 'error' ? 'bg-red-500' : 'bg-slate-800')}`;
+            toast.className = `toast-animate pointer-events-auto px-4 py-3 rounded-xl shadow-xl text-sm font-black text-white flex items-center space-x-2 ${type === 'success' ? 'bg-emerald-500' : (type === 'error' ? 'bg-red-500' : 'bg-slate-800')}`;
             toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle')}"></i> <span>${msg}</span>`;
             container.appendChild(toast);
             setTimeout(() => {
@@ -338,7 +389,7 @@
         }
 
         function initTheme() {
-            const savedTheme = localStorage.getItem('framecraft_theme');
+            const savedTheme = localStorage.getItem('farm_theme');
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
                 document.getElementById('theme-icon').className = "fa-solid fa-sun";
@@ -350,7 +401,7 @@
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('framecraft_theme', isDark ? 'dark' : 'light');
+            localStorage.setItem('farm_theme', isDark ? 'dark' : 'light');
             document.getElementById('theme-icon').className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon";
         }
         initTheme();
@@ -381,7 +432,7 @@
                 return;
             }
 
-            let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
+            let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
             const order = orders.find(o => o.id.toString() === inputId);
 
             if(!order) {
@@ -398,18 +449,17 @@
             let cancelBtnHtml = '';
             if(order.status === 'Pending' || order.status === 'Processing') {
                 cancelBtnHtml = `
-                    <button onclick="cancelCustomerOrder(${order.id})" class="mt-4 w-full bg-red-50 dark:bg-red-900/20 hover:bg-red-600 hover:text-white text-red-600 border border-red-200 dark:border-red-800 font-bold py-2.5 rounded-lg text-xs transition flex items-center justify-center space-x-2">
+                    <button onclick="cancelCustomerOrder(${order.id})" class="mt-4 w-full bg-red-50 dark:bg-red-900/20 hover:bg-red-600 hover:text-white text-red-600 border border-red-200 dark:border-red-800 font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-2">
                         <i class="fa-solid fa-ban"></i> <span>Cancel This Order</span>
                     </button>
                 `;
             }
 
-            // Timeline Visual Builder
             const history = order.trackingHistory || [
                 { status: "Pending", time: order.date, remark: "Order Placed Successfully" }
             ];
 
-            const historyHtml = history.map((item, index) => {
+            const historyHtml = history.map((item) => {
                 let badgeColor = "bg-amber-500";
                 if(item.status === 'Processing') badgeColor = "bg-blue-500";
                 if(item.status === 'Shipped') badgeColor = "bg-purple-500";
@@ -431,17 +481,17 @@
             const estimatedDateStr = order.estimatedDelivery || "3-5 Business Days";
 
             container.innerHTML = `
-                <div class="bg-gray-50 dark:bg-gray-900 p-5 rounded-xl border dark:border-gray-700 shadow-inner mt-4">
+                <div class="bg-gray-50 dark:bg-gray-900 p-5 rounded-2xl border dark:border-gray-700 shadow-inner mt-4">
                     <div class="flex justify-between items-center mb-3 border-b dark:border-gray-700 pb-3">
                         <span class="font-black text-slate-900 dark:text-white text-lg">Order #${order.id}</span>
-                        <span class="font-bold text-xs uppercase px-3 py-1 rounded ${statusColor}">${order.status}</span>
+                        <span class="font-bold text-xs uppercase px-3 py-1 rounded-full ${statusColor}">${order.status}</span>
                     </div>
                     <div class="space-y-1 mb-4">
                         <p class="text-sm text-gray-600 dark:text-gray-300"><strong>Customer:</strong> ${order.name}</p>
                         <p class="text-sm text-gray-600 dark:text-gray-300"><strong>Date Placed:</strong> ${order.date}</p>
                         <p class="text-sm text-gray-600 dark:text-gray-300"><strong>Total Billed:</strong> ₹${order.total}</p>
                         ${order.status !== 'Cancelled' ? `
-                            <div class="mt-2 bg-blue-50 dark:bg-blue-900/30 p-2.5 rounded-lg border border-blue-200 dark:border-blue-800 flex items-center space-x-2">
+                            <div class="mt-2 bg-blue-50 dark:bg-blue-900/30 p-2.5 rounded-xl border border-blue-200 dark:border-blue-800 flex items-center space-x-2">
                                 <i class="fa-solid fa-calendar-day text-blue-600 dark:text-blue-400"></i>
                                 <span class="text-xs font-bold text-blue-800 dark:text-blue-300">Estimated Delivery: ${estimatedDateStr}</span>
                             </div>
@@ -463,7 +513,7 @@
         function cancelCustomerOrder(orderId) {
             if(!confirm("Are you sure you want to completely cancel this order?")) return;
 
-            let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
+            let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
             const idx = orders.findIndex(o => o.id === orderId);
             
             if(idx > -1) {
@@ -481,7 +531,7 @@
                     remark: 'Cancelled by Customer'
                 });
 
-                localStorage.setItem('framecraft_orders', JSON.stringify(orders));
+                localStorage.setItem('farm_orders', JSON.stringify(orders));
                 
                 order.items.forEach(item => {
                     const dbProdIndex = products.findIndex(p => p.id === item.id);
@@ -489,15 +539,32 @@
                         products[dbProdIndex].stock += item.quantity;
                     }
                 });
-                localStorage.setItem('framecraft_db', JSON.stringify(products));
+                localStorage.setItem('farm_global_db', JSON.stringify(products));
                 renderProducts(products); 
+                renderFeaturedCarousel();
                 
                 showToast("Order Cancelled Successfully!", "success");
                 checkOrderStatus(); 
                 
-                const msg = `⚠️ *ORDER CANCELLED* ⚠️\n\nCustomer *${order.name}* has cancelled their order.\n\n*Order ID:* #${order.id}\n*Status:* Items restocked automatically.`;
+                const msg = `⚠️ *FARMORA ORDER CANCELLED* ⚠️\n\nCustomer *${order.name}* has cancelled order #${order.id}.\nItems restocked automatically.`;
                 window.open(`https://wa.me/${MY_WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
             }
+        }
+
+        function renderFeaturedCarousel() {
+            const carousel = document.getElementById('featured-carousel');
+            if(!carousel) return;
+            carousel.innerHTML = products.map(prod => `
+                <div onclick="openGallery('${prod.image}')" class="flex-shrink-0 w-60 bg-white dark:bg-gray-800 rounded-2xl shadow-md border dark:border-gray-700 overflow-hidden cursor-pointer product-card relative group">
+                    <img src="${prod.image}" alt="${prod.title}" class="w-full h-36 object-cover group-hover:scale-105 transition duration-300">
+                    <div class="absolute top-2 right-2 bg-amber-500 text-slate-900 font-black text-[10px] px-2 py-0.5 rounded-full shadow">FEATURED</div>
+                    <div class="p-3">
+                        <span class="text-[9px] font-bold uppercase text-amber-600 bg-amber-50 dark:bg-amber-900/40 px-2 py-0.5 rounded">${prod.category}</span>
+                        <h4 class="font-bold text-xs text-gray-800 dark:text-gray-100 mt-1 truncate">${prod.title}</h4>
+                        <p class="text-xs font-black text-amber-600 mt-0.5">₹${prod.sizes && prod.sizes[0] ? prod.sizes[0].price : '299'}+</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function renderProducts(itemsToRender) {
@@ -505,47 +572,47 @@
             grid.innerHTML = '';
 
             if(!itemsToRender || itemsToRender.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-12 flex flex-col items-center text-gray-400"><i class="fa-solid fa-box-open text-5xl mb-4 opacity-50"></i><p>No products found.</p></div>`;
+                grid.innerHTML = `<div class="col-span-full py-16 flex flex-col items-center text-gray-400"><i class="fa-solid fa-box-open text-6xl mb-4 opacity-50"></i><p class="text-base font-bold">No products found in FARMORA inventory.</p></div>`;
                 return;
             }
 
             itemsToRender.forEach(prod => {
-                const stockVal = prod.stock !== undefined ? prod.stock : 10;
+                const stockVal = prod.stock !== undefined ? prod.stock : 15;
                 const isOutOfStock = stockVal <= 0;
                 const isWished = wishlist.includes(prod.id);
                 
                 const sizeOptions = (prod.sizes || []).map((s, idx) => `<option value="${idx}">${s.label} - ₹${s.price}</option>`).join('');
 
                 grid.innerHTML += `
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 overflow-hidden product-card flex flex-col justify-between relative group">
-                        <button onclick="toggleWishlist(${prod.id}, event)" class="absolute top-2 left-2 z-10 w-8 h-8 rounded-full bg-white/80 dark:bg-gray-900/80 shadow flex items-center justify-center transition">
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md border dark:border-gray-700 overflow-hidden product-card flex flex-col justify-between relative group">
+                        <button onclick="toggleWishlist(${prod.id}, event)" class="absolute top-3 left-3 z-10 w-9 h-9 rounded-full bg-white/90 dark:bg-gray-900/90 shadow-md flex items-center justify-center transition">
                             <i class="fa-heart ${isWished ? 'fa-solid text-red-500' : 'fa-regular text-gray-400 dark:text-gray-300'}"></i>
                         </button>
                         
                         <div class="relative overflow-hidden cursor-pointer" onclick="openGallery('${prod.image}')">
-                            <img src="${prod.image}" alt="${prod.title}" loading="lazy" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
-                            ${isOutOfStock ? `<div class="absolute inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-[2px] flex items-center justify-center"><span class="bg-red-600 text-white font-black px-3 py-1 rounded shadow text-sm">OUT OF STOCK</span></div>` : ''}
+                            <img src="${prod.image}" alt="${prod.title}" loading="lazy" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105">
+                            ${isOutOfStock ? `<div class="absolute inset-0 bg-white/60 dark:bg-black/60 backdrop-blur-[2px] flex items-center justify-center"><span class="bg-red-600 text-white font-black px-4 py-1.5 rounded-xl shadow-lg text-sm tracking-wider">SOLD OUT</span></div>` : ''}
                         </div>
                         
                         <div class="p-4 flex-1 flex flex-col">
                             <div class="flex justify-between items-start">
-                                <span class="text-[10px] font-bold uppercase tracking-wide text-amber-600 bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 rounded">${prod.category}</span>
-                                <span class="text-xs text-gray-400 dark:text-gray-500">Stock: ${stockVal}</span>
+                                <span class="text-[10px] font-black uppercase tracking-wider text-amber-600 bg-amber-50 dark:bg-amber-900/40 px-2.5 py-1 rounded-lg">${prod.category}</span>
+                                <span class="text-xs font-semibold text-gray-400 dark:text-gray-500">Stock: ${stockVal}</span>
                             </div>
-                            <h3 class="font-bold text-gray-800 dark:text-gray-100 text-base mt-2 leading-tight">${prod.title}</h3>
-                            <p class="text-gray-500 dark:text-gray-400 text-xs mt-1 line-clamp-2 flex-1">${prod.description}</p>
+                            <h3 class="font-extrabold text-gray-800 dark:text-gray-100 text-base mt-2 leading-snug">${prod.title}</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-xs mt-1.5 line-clamp-2 flex-1">${prod.description}</p>
                             
                             <div class="mt-3">
-                                <select id="size-select-${prod.id}" class="w-full text-xs p-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 dark:text-gray-200 focus:outline-none" ${isOutOfStock ? 'disabled' : ''}>
+                                <select id="size-select-${prod.id}" class="w-full text-xs p-2.5 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-gray-200 focus:outline-none font-medium" ${isOutOfStock ? 'disabled' : ''}>
                                     ${sizeOptions}
                                 </select>
                             </div>
                         </div>
 
                         <div class="p-4 pt-0">
-                            <button onclick="addToCart(${prod.id})" ${isOutOfStock ? 'disabled' : ''} class="w-full bg-slate-900 dark:bg-gray-700 hover:bg-slate-800 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-amber-400 font-bold py-2.5 rounded-lg text-xs flex items-center justify-center space-x-2 transition shadow-sm">
-                                <i class="fa-solid fa-cart-plus"></i>
-                                <span>${isOutOfStock ? 'Sold Out' : 'Add to Cart'}</span>
+                            <button onclick="addToCart(${prod.id})" ${isOutOfStock ? 'disabled' : ''} class="w-full bg-slate-900 dark:bg-gray-700 hover:bg-slate-800 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-amber-400 font-extrabold py-3 rounded-xl text-xs flex items-center justify-center space-x-2 transition shadow-md">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                                <span>${isOutOfStock ? 'Sold Out' : 'Add to Bag'}</span>
                             </button>
                         </div>
                     </div>
@@ -558,11 +625,9 @@
             showWishlistOnly = false;
             const buttons = document.querySelectorAll('.category-btn');
             buttons.forEach(btn => {
-                btn.classList.remove('bg-amber-500', 'text-slate-900', 'shadow-sm');
-                btn.classList.add('bg-white', 'text-gray-700', 'dark:bg-gray-800', 'dark:text-gray-300');
-                if(btn.innerText === category || (category === 'All' && btn.innerText === 'All Items')) {
-                    btn.classList.add('bg-amber-500', 'text-slate-900', 'shadow-sm');
-                    btn.classList.remove('bg-white', 'text-gray-700', 'dark:bg-gray-800', 'dark:text-gray-300');
+                btn.className = "category-btn bg-gray-100 dark:bg-gray-700 hover:bg-amber-100 text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition";
+                if(btn.innerText === category || (category === 'All' && btn.innerText === 'All Collections')) {
+                    btn.className = "category-btn bg-amber-500 text-slate-900 px-5 py-2.5 rounded-xl text-sm font-black whitespace-nowrap shadow-md transition";
                 }
             });
             handleSearch();
@@ -586,7 +651,7 @@
 
         function filterWishlist() {
             showWishlistOnly = !showWishlistOnly;
-            if(showWishlistOnly) { showToast("Showing favorites", "info"); }
+            if(showWishlistOnly) { showToast("Showing your favorite items", "info"); }
             handleSearch();
         }
 
@@ -595,7 +660,7 @@
             const idx = wishlist.indexOf(id);
             if(idx > -1) { wishlist.splice(idx, 1); showToast("Removed from favorites", "info"); } 
             else { wishlist.push(id); showToast("Added to favorites!", "success"); }
-            localStorage.setItem('framecraft_wishlist', JSON.stringify(wishlist));
+            localStorage.setItem('farm_wishlist', JSON.stringify(wishlist));
             handleSearch();
         }
 
@@ -622,7 +687,7 @@
             const prod = products.find(p => p.id === productId);
             const sizeSelect = document.getElementById(`size-select-${productId}`);
             const selectedSizeObj = prod.sizes[sizeSelect.value];
-            const stock = prod.stock !== undefined ? prod.stock : 10;
+            const stock = prod.stock !== undefined ? prod.stock : 15;
 
             const cartItemIndex = cart.findIndex(ci => ci.id === productId && ci.size === selectedSizeObj.label);
             const currentQtyInCart = cartItemIndex > -1 ? cart[cartItemIndex].quantity : 0;
@@ -633,21 +698,21 @@
             }
 
             if (cartItemIndex > -1) cart[cartItemIndex].quantity += 1;
-            else cart.push({ id: prod.id, title: prod.title, size: selectedSizeObj.label, price: selectedSizeObj.price, quantity: 1 });
+            else cart.push({ id: prod.id, title: prod.title, size: selectedSizeObj.label, price: selectedSizeObj.price, quantity: 1, image: prod.image });
 
             const cartBtn = document.getElementById('cart-btn');
             cartBtn.classList.add('shake-cart');
             setTimeout(() => cartBtn.classList.remove('shake-cart'), 400);
 
             updateCartUI();
-            showToast("Item added to cart!");
+            showToast("Item added to your bag!");
             toggleCartModal(true); 
         }
 
         function removeFromCart(index) {
             cart.splice(index, 1);
             updateCartUI();
-            showToast("Item removed", "info");
+            showToast("Item removed from bag", "info");
         }
 
         function clearCart() {
@@ -655,17 +720,17 @@
             cart = [];
             appliedDiscount = 0;
             updateCartUI();
-            showToast("Cart cleared", "info");
+            showToast("Bag cleared", "info");
         }
 
         function applyPromoCode() {
             const code = document.getElementById('promo-input').value.trim().toUpperCase();
             if (code === "DISCOUNT10") {
                 appliedDiscount = 10;
-                showToast("10% Discount Applied!", "success");
+                showToast("10% FARMORA Discount Applied!", "success");
             } else if (code === "FRAME20") {
                 appliedDiscount = 20;
-                showToast("20% Discount Applied!", "success");
+                showToast("20% FARMORA Discount Applied!", "success");
             } else {
                 appliedDiscount = 0;
                 showToast("Invalid Promo Code", "error");
@@ -674,7 +739,7 @@
         }
 
         function updateCartUI() {
-            localStorage.setItem('framecraft_cart', JSON.stringify(cart));
+            localStorage.setItem('farm_cart', JSON.stringify(cart));
             const container = document.getElementById('cart-items-container');
             const cartCount = document.getElementById('cart-count');
             const cartTotal = document.getElementById('cart-total');
@@ -683,19 +748,22 @@
             let total = 0; let totalItems = 0;
 
             if (cart.length === 0) {
-                container.innerHTML = `<p class="text-center text-gray-400 py-10 text-sm">Your cart is empty.</p>`;
+                container.innerHTML = `<div class="text-center text-gray-400 py-16"><i class="fa-solid fa-bag-shopping text-5xl mb-3 opacity-30"></i><p class="text-sm font-bold">Your shopping bag is empty.</p></div>`;
             } else {
                 cart.forEach((item, index) => {
                     total += item.price * item.quantity;
                     totalItems += item.quantity;
                     container.innerHTML += `
-                        <div class="flex justify-between items-center bg-white dark:bg-gray-700 p-3 rounded-lg border dark:border-gray-600 text-xs shadow-sm">
-                            <div>
-                                <h4 class="font-bold text-gray-800 dark:text-gray-100">${item.title}</h4>
-                                <p class="text-gray-500 dark:text-gray-400">Variant: ${item.size}</p>
-                                <p class="font-semibold text-amber-600 mt-1">₹${item.price} x ${item.quantity}</p>
+                        <div class="flex items-center justify-between bg-white dark:bg-gray-700 p-3 rounded-2xl border dark:border-gray-600 text-xs shadow-sm">
+                            <div class="flex items-center space-x-3">
+                                <img src="${item.image || 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=500&q=80'}" class="w-12 h-12 object-cover rounded-xl">
+                                <div>
+                                    <h4 class="font-extrabold text-gray-800 dark:text-gray-100">${item.title}</h4>
+                                    <p class="text-gray-500 dark:text-gray-400 font-medium">Variant: ${item.size}</p>
+                                    <p class="font-black text-amber-600 mt-0.5">₹${item.price} x ${item.quantity}</p>
+                                </div>
                             </div>
-                            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 p-2 bg-red-50 dark:bg-red-900/20 rounded-full transition">
+                            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 p-2.5 bg-red-50 dark:bg-red-900/20 rounded-xl transition">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
@@ -722,14 +790,14 @@
 
         function handleWhatsAppOrder(e) {
             e.preventDefault();
-            if (cart.length === 0) return showToast("Your cart is empty!", "error");
+            if (cart.length === 0) return showToast("Your bag is empty!", "error");
 
             const name = sanitize(document.getElementById('cust-name').value);
             const rawPhone = document.getElementById('cust-phone').value;
             const phone = sanitize(rawPhone.replace(/\D/g, ''));
             
             if(phone.length !== 10) {
-                showToast("Please enter a valid 10-digit phone number", "error");
+                showToast("Please enter a valid 10-digit WhatsApp number", "error");
                 return;
             }
 
@@ -762,9 +830,9 @@
             if (appliedDiscount > 0) grandTotal = Math.round(grandTotal * (1 - appliedDiscount / 100));
             grandTotal += shippingFee;
 
-            localStorage.setItem('framecraft_db', JSON.stringify(products));
+            // Save globally so all users & admin see stock updates instantly
+            localStorage.setItem('farm_global_db', JSON.stringify(products));
 
-            // Estimate Delivery (Current Date + 5 Days)
             const estDate = new Date();
             estDate.setDate(estDate.getDate() + 5);
             const estDateFormatted = estDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -775,16 +843,15 @@
                 items: [...cart], shipping: shippingFee, total: grandTotal, otp: deliveryOtp, status: "Pending",
                 estimatedDelivery: estDateFormatted,
                 trackingHistory: [
-                    { status: "Pending", time: orderDateFormatted, remark: "Order Placed Successfully" }
+                    { status: "Pending", time: orderDateFormatted, remark: "Order Placed Successfully via FARMORA" }
                 ]
             };
             
-            let savedOrders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
+            let savedOrders = JSON.parse(localStorage.getItem('farm_orders')) || [];
             savedOrders.unshift(newOrder);
-            localStorage.setItem('framecraft_orders', JSON.stringify(savedOrders));
+            localStorage.setItem('farm_orders', JSON.stringify(savedOrders));
 
-            // READONLY UNEDITABLE GENERATED TEXT LINK
-            const message = `🛒 *NEW ORDER #${orderId}*\n\n👤 *Customer Details:*\n- *Name:* ${name}\n- *Phone:* ${phone}\n- *Address:* ${address}\n\n📦 *Items Ordered:*\n${itemsFormatted}🚚 *Shipping:* ${shippingFee === 0 ? 'Standard (Free)' : 'Express (+₹50)'}\n📝 *Customization:*\n"${customText}"\n\n💰 *Total Amount:* ₹${grandTotal}\n📅 *Estimated Delivery:* ${estDateFormatted}\n🔐 *Delivery Secret OTP:* *${deliveryOtp}*`;
+            const message = `🌿 *FARMORA NEW ORDER #${orderId}* 🌿\n\n👤 *Customer Details:*\n- *Name:* ${name}\n- *Phone:* ${phone}\n- *Address:* ${address}\n\n📦 *Items Ordered:*\n${itemsFormatted}🚚 *Shipping:* ${shippingFee === 0 ? 'Standard (Free)' : 'Express (+₹50)'}\n📝 *Customization Details:*\n"${customText}"\n\n💰 *Total Amount:* ₹${grandTotal}\n📅 *Estimated Delivery:* ${estDateFormatted}\n🔐 *Secret Delivery OTP:* *${deliveryOtp}*`;
 
             window.open(`https://wa.me/${MY_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
 
@@ -794,6 +861,7 @@
             document.getElementById('checkout-form').reset();
             toggleCartModal(false);
             renderProducts(products);
+            renderFeaturedCarousel();
         }
 
         let clickCount = 0; let clickTimer;
@@ -802,7 +870,7 @@
             clickCount++; clearTimeout(clickTimer);
             if (clickCount >= 5) {
                 clickCount = 0;
-                if (prompt("Owner Password:") === ADMIN_PASSWORD) {
+                if (prompt("FARMORA Owner Password:") === ADMIN_PASSWORD) {
                     toggleAdminModal();
                     renderAdminOrders('All'); 
                     renderAdminProductList();
@@ -833,15 +901,15 @@
             const row = document.createElement('div');
             row.className = "flex space-x-2 items-center variant-row";
             row.innerHTML = `
-                <input type="text" placeholder="Size/Variant (e.g. 8x10)" value="${label}" required class="variant-label w-1/2 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
-                <input type="number" placeholder="Price (₹)" value="${price}" required class="variant-price w-1/2 p-2 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
+                <input type="text" placeholder="Size/Variant (e.g. 8x10)" value="${label}" required class="variant-label w-1/2 p-2.5 border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
+                <input type="number" placeholder="Price (₹)" value="${price}" required class="variant-price w-1/2 p-2.5 border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-amber-400 outline-none">
                 <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700 p-2"><i class="fa-solid fa-times"></i></button>
             `;
             container.appendChild(row);
         }
 
         function renderAdminOrders(filterStatus = 'All') {
-            let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
+            let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
             
             let rev = 0, pend = 0, deliv = 0;
             orders.forEach(o => {
@@ -858,11 +926,11 @@
             if(orders.length === 0) return container.innerHTML = `<p class="text-center text-gray-500 py-6">No orders found.</p>`;
 
             container.innerHTML = orders.map(order => `
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border dark:border-gray-700 text-sm">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border dark:border-gray-700 text-sm">
                     <div class="flex justify-between items-center border-b dark:border-gray-700 pb-2 mb-2">
                         <div>
-                            <span class="font-extrabold text-slate-900 dark:text-white bg-amber-100 dark:bg-amber-900/50 px-2 py-1 rounded">Order #${order.id}</span>
-                            <select onchange="updateOrderStatus(${order.id}, this.value)" class="ml-2 px-2 py-0.5 text-xs font-bold rounded border dark:border-gray-600 dark:bg-gray-700 ${order.status === 'Cancelled' ? 'text-red-500' : ''}">
+                            <span class="font-extrabold text-slate-900 dark:text-white bg-amber-100 dark:bg-amber-900/50 px-2.5 py-1 rounded-lg">Order #${order.id}</span>
+                            <select onchange="updateOrderStatus(${order.id}, this.value)" class="ml-2 px-2.5 py-1 text-xs font-bold rounded-lg border dark:border-gray-600 dark:bg-gray-700 ${order.status === 'Cancelled' ? 'text-red-500' : ''}">
                                 <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
                                 <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
                                 <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
@@ -871,15 +939,15 @@
                             </select>
                         </div>
                         <div class="flex space-x-2">
-                            <button onclick="downloadInvoice(${order.id})" class="text-blue-500 hover:text-blue-700"><i class="fa-solid fa-file-pdf"></i></button>
-                            <button onclick="deleteOrder(${order.id})" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="downloadInvoice(${order.id})" class="text-blue-500 hover:text-blue-700 p-1"><i class="fa-solid fa-file-pdf"></i></button>
+                            <button onclick="deleteOrder(${order.id})" class="text-red-400 hover:text-red-600 p-1"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                     <div class="space-y-1 mb-3 text-gray-700 dark:text-gray-300">
                         <p><i class="fa-solid fa-user text-gray-400 w-5"></i> <span class="font-bold">${order.name}</span> (${order.phone})</p>
                         <p><i class="fa-solid fa-location-dot text-red-400 w-5"></i> ${order.address}</p>
                     </div>
-                    <div class="bg-gray-50 dark:bg-gray-900 p-2 rounded border dark:border-gray-700 mb-3">
+                    <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded-xl border dark:border-gray-700 mb-3">
                         <ul class="space-y-1">
                             ${order.items.map(i => `<li class="flex justify-between text-xs text-gray-600 dark:text-gray-400"><span>${i.quantity}x ${i.title} (${i.size})</span> <span>₹${i.price * i.quantity}</span></li>`).join('')}
                         </ul>
@@ -893,7 +961,7 @@
         }
 
         function updateOrderStatus(orderId, newStatus) {
-            let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
+            let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
             const idx = orders.findIndex(o => o.id === orderId);
             if(idx > -1) {
                 if(orders[idx].status !== 'Cancelled' && newStatus === 'Cancelled') {
@@ -903,8 +971,9 @@
                             products[dbProdIndex].stock += item.quantity;
                         }
                     });
-                    localStorage.setItem('framecraft_db', JSON.stringify(products));
+                    localStorage.setItem('farm_global_db', JSON.stringify(products));
                     renderProducts(products); 
+                    renderFeaturedCarousel();
                 }
 
                 orders[idx].status = newStatus;
@@ -916,9 +985,9 @@
                 }
 
                 let statusRemark = "Order status updated";
-                if(newStatus === 'Processing') statusRemark = "Items undergoing customization & preparation";
-                if(newStatus === 'Shipped') statusRemark = "Handed over to courier / Dispatched";
-                if(newStatus === 'Delivered') statusRemark = "Package successfully delivered";
+                if(newStatus === 'Processing') statusRemark = "Items undergoing premium customization & preparation";
+                if(newStatus === 'Shipped') statusRemark = "Handed over to courier / Dispatched securely";
+                if(newStatus === 'Delivered') statusRemark = "Package successfully delivered with OTP verification";
                 if(newStatus === 'Cancelled') statusRemark = "Order cancelled";
 
                 orders[idx].trackingHistory.push({
@@ -927,14 +996,14 @@
                     remark: statusRemark
                 });
 
-                localStorage.setItem('framecraft_orders', JSON.stringify(orders));
+                localStorage.setItem('farm_orders', JSON.stringify(orders));
                 showToast(`Order #${orderId} set to ${newStatus}`);
                 renderAdminOrders('All');
             }
         }
 
         function exportOrdersCSV() {
-            let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
+            let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
             if(orders.length === 0) return showToast("No data to export", "error");
             
             let csvContent = "data:text/csv;charset=utf-8,ID,Date,Name,Phone,Status,Total\n";
@@ -943,31 +1012,31 @@
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "FrameCraft_Orders.csv");
+            link.setAttribute("download", "FARMORA_Orders.csv");
             document.body.appendChild(link);
             link.click();
             link.remove();
         }
 
         function downloadInvoice(orderId) {
-            showToast("Generating Invoice...", "info");
-            let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
+            showToast("Generating FARMORA Invoice...", "info");
+            let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
             const order = orders.find(o => o.id === orderId);
             if(!order) return;
 
             const template = document.getElementById('invoice-template');
             template.innerHTML = `
-                <div class="border-4 border-slate-900 p-8 m-4 relative">
-                    <h1 class="text-3xl font-black text-slate-900 mb-1">Frame<span class="text-amber-500">Craft</span></h1>
-                    <p class="text-sm text-gray-500 mb-8">Premium Customized Gifts</p>
+                <div class="border-4 border-slate-900 p-8 m-4 relative bg-white">
+                    <h1 class="text-3xl font-black text-slate-900 mb-1">FAR<span class="text-amber-500">MORA</span></h1>
+                    <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-8">~ Frame Your Memories, Beautify Your Spaces ~</p>
                     <div class="absolute top-8 right-8 text-right">
                         <h2 class="text-xl font-bold uppercase text-gray-800">INVOICE</h2>
-                        <p class="text-sm">#${order.id}</p>
-                        <p class="text-sm">${order.date}</p>
+                        <p class="text-sm font-bold">#${order.id}</p>
+                        <p class="text-xs text-gray-500">${order.date}</p>
                     </div>
                     <div class="mb-8 border-l-4 border-amber-500 pl-4">
                         <p class="font-bold text-gray-800">Billed To:</p>
-                        <p class="text-sm">${order.name}</p>
+                        <p class="text-sm font-semibold">${order.name}</p>
                         <p class="text-sm">${order.phone}</p>
                         <p class="text-sm">${order.address}</p>
                     </div>
@@ -980,14 +1049,15 @@
                     <div class="flex justify-between items-center bg-gray-50 p-4 font-bold text-lg border">
                         <span>Grand Total:</span><span class="text-emerald-600">₹${order.total}</span>
                     </div>
+                    <p class="text-center text-xs text-gray-400 mt-8">Thank you for choosing FARMORA!</p>
                 </div>
             `;
             template.classList.remove('hidden');
             
             try {
-                html2pdf().set({ margin: 0.5, filename: `Invoice_${order.id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(template).save().then(() => {
+                html2pdf().set({ margin: 0.5, filename: `FARMORA_Invoice_${order.id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(template).save().then(() => {
                     template.classList.add('hidden');
-                    showToast("Invoice downloaded!");
+                    showToast("Invoice downloaded successfully!");
                 }).catch(err => {
                     template.classList.add('hidden');
                     showToast("Failed PDF generation", "error");
@@ -999,22 +1069,23 @@
         }
 
         function deleteOrder(orderId) {
-            if(confirm("Permanently delete order?")) {
-                let orders = JSON.parse(localStorage.getItem('framecraft_orders')) || [];
-                localStorage.setItem('framecraft_orders', JSON.stringify(orders.filter(o => o.id !== orderId)));
+            if(confirm("Permanently delete this order?")) {
+                let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
+                localStorage.setItem('farm_orders', JSON.stringify(orders.filter(o => o.id !== orderId)));
                 renderAdminOrders('All');
+                showToast("Order deleted", "info");
             }
         }
 
         function renderAdminProductList() {
             const container = document.getElementById('admin-products-list');
             container.innerHTML = products.length === 0 ? `<p class="text-xs text-gray-400">No products available.</p>` : products.map(p => {
-                const stockVal = p.stock !== undefined ? p.stock : 10;
+                const stockVal = p.stock !== undefined ? p.stock : 15;
                 const isLowStock = stockVal < 3;
                 return `
-                <div class="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded-lg border dark:border-gray-700 text-xs shadow-sm">
+                <div class="flex justify-between items-center bg-white dark:bg-gray-800 p-3.5 rounded-2xl border dark:border-gray-700 text-xs shadow-sm">
                     <div class="flex items-center space-x-3">
-                        <img src="${p.image}" class="w-10 h-10 object-cover rounded">
+                        <img src="${p.image}" class="w-12 h-12 object-cover rounded-xl">
                         <div>
                             <h4 class="font-bold text-gray-800 dark:text-gray-100 flex items-center">
                                 ${p.title}
@@ -1024,19 +1095,21 @@
                         </div>
                     </div>
                     <div class="flex space-x-2">
-                        <button onclick="editProduct(${p.id})" class="bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 text-blue-600 p-2 rounded-lg font-bold"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteProduct(${p.id});" class="bg-red-50 dark:bg-red-900/30 hover:bg-red-100 text-red-600 p-2 rounded-lg font-bold"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="editProduct(${p.id})" class="bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 text-blue-600 p-2.5 rounded-xl font-bold"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteProduct(${p.id});" class="bg-red-50 dark:bg-red-900/30 hover:bg-red-100 text-red-600 p-2.5 rounded-xl font-bold"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             `}).join('');
         }
 
         function deleteProduct(productId) {
-            if(confirm("Delete this product?")) {
+            if(confirm("Permanently delete this product from global catalog?")) {
                 products = products.filter(p => p.id !== productId);
-                localStorage.setItem('framecraft_db', JSON.stringify(products));
+                localStorage.setItem('farm_global_db', JSON.stringify(products));
                 renderProducts(products);
+                renderFeaturedCarousel();
                 renderAdminProductList();
+                showToast("Product deleted", "info");
             }
         }
 
@@ -1048,20 +1121,19 @@
             document.getElementById('admin-title').value = prod.title;
             document.getElementById('admin-category').value = prod.category;
             document.getElementById('admin-desc').value = prod.description;
-            document.getElementById('admin-stock').value = prod.stock !== undefined ? prod.stock : 10;
+            document.getElementById('admin-stock').value = prod.stock !== undefined ? prod.stock : 15;
             
             const container = document.getElementById('variant-builder-container');
             container.innerHTML = '';
             (prod.sizes || []).forEach(s => addVariantField(s.label, s.price));
 
-            document.getElementById('admin-submit-btn').innerHTML = `<i class="fa-solid fa-save mr-2"></i>Update Product`;
+            document.getElementById('admin-submit-btn').innerHTML = `<i class="fa-solid fa-save mr-2"></i>Update Global Product`;
         }
 
-        /* GUARANTEED PRODUCT ADD / EDIT HANDLER WITH BASE64 FALLBACK */
         async function handleProductSubmit(e) {
             e.preventDefault();
             const btn = document.getElementById('admin-submit-btn');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing & Syncing...`;
             btn.disabled = true;
 
             try {
@@ -1084,7 +1156,6 @@
                             throw new Error("ImgBB API rejected");
                         }
                     } catch (err) {
-                        // Fallback to local DataURL if cloud upload fails
                         imageUrl = await new Promise(res => { 
                             const r = new FileReader(); 
                             r.onload = e => res(e.target.result); 
@@ -1108,7 +1179,7 @@
                 if(sizesArr.length === 0) {
                     alert("Please add at least one valid variant!");
                     btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i>Save Product`;
+                    btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i>Save & Publish Globally`;
                     return;
                 }
 
@@ -1126,15 +1197,16 @@
                     const idx = products.findIndex(p => p.id == editId);
                     if(idx > -1) products[idx] = newProduct;
                     else products.unshift(newProduct);
-                    showToast("Product Updated!");
+                    showToast("FARMORA Product Updated Globally!");
                 } else {
                     products.unshift(newProduct);
-                    showToast("Product Added Successfully!");
+                    showToast("FARMORA Product Published Globally!");
                 }
 
-                localStorage.setItem('framecraft_db', JSON.stringify(products));
+                localStorage.setItem('farm_global_db', JSON.stringify(products));
                 
                 renderProducts(products); 
+                renderFeaturedCarousel();
                 filterCategory('All'); 
                 
                 document.getElementById('add-product-form').reset();
@@ -1144,7 +1216,7 @@
             } catch (err) {
                 showToast("Error saving product: " + err.message, "error");
             } finally {
-                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i>Save Product`;
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i>Save & Publish Globally`;
                 btn.disabled = false;
             }
         }
@@ -1152,6 +1224,7 @@
         addVariantField();
         updateCartUI();
         renderProducts(products);
+        renderFeaturedCarousel();
     </script>
 </body>
-</html>
+    </html>
