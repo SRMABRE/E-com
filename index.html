@@ -14,7 +14,7 @@
     </script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- html2pdf for Automated Invoices -->
+    <!-- html2pdf for Automated Invoices & Coupons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- DOMPurify for Input Sanitization -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
@@ -116,9 +116,7 @@
                 </h2>
                 <span class="text-xs text-amber-600 dark:text-amber-400 font-bold">Swipe / Scroll</span>
             </div>
-            <div id="featured-carousel" class="flex space-x-4 overflow-x-auto pb-4 no-scrollbar scroll-smooth">
-                <!-- Dynamically populated featured items -->
-            </div>
+            <div id="featured-carousel" class="flex space-x-4 overflow-x-auto pb-4 no-scrollbar scroll-smooth"></div>
         </div>
 
         <!-- SEARCH & CATEGORIES -->
@@ -336,12 +334,17 @@
                     <input type="tel" id="cust-phone" pattern="[0-9]{10}" title="Please enter exactly 10 digits" placeholder="WhatsApp Number (10 Digits) *" required class="w-full text-xs p-3 border dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none">
                     <textarea id="cust-address" placeholder="Complete Delivery Address *" rows="2" required class="w-full text-xs p-3 border dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none"></textarea>
                     
-                    <!-- Feature 1: Photo & Customization Helper Note -->
-                    <div class="bg-amber-50 dark:bg-amber-900/20 p-2.5 rounded-xl border border-amber-200 dark:border-amber-800 text-[11px] text-amber-800 dark:text-amber-300">
-                        <i class="fa-solid fa-camera-retro mr-1"></i> <strong>Customization:</strong> Please share your photos / text directly on WhatsApp after placing the order.
+                    <!-- Feature 1: Photo Upload Preview for Customer -->
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-600 dark:text-gray-300 mb-1">Upload Photo to Preview & Print</label>
+                        <input type="file" id="cust-photo-upload" accept="image/*" onchange="previewCustomerPhoto(event)" class="w-full text-xs p-2 border dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-amber-100 file:text-amber-800">
+                        <div id="cust-photo-preview-container" class="mt-2 hidden">
+                            <img id="cust-preview-img" class="w-20 h-20 object-cover rounded-xl border-2 border-amber-500 shadow-sm">
+                            <span class="text-[10px] text-emerald-600 font-bold block mt-1">✓ Photo attached successfully for printing</span>
+                        </div>
                     </div>
 
-                    <textarea id="cust-custom-text" placeholder="Customization details (Names, quotes, dates)" rows="2" class="w-full text-xs p-3 border dark:border-amber-900 rounded-xl focus:ring-2 focus:ring-amber-400 outline-none bg-amber-50 dark:bg-amber-900/20"></textarea>
+                    <textarea id="cust-custom-text" placeholder="Customization details (e.g. Text/Name/Theme to print)" rows="2" class="w-full text-xs p-3 border dark:border-amber-900 rounded-xl focus:ring-2 focus:ring-amber-400 outline-none bg-amber-50 dark:bg-amber-900/20"></textarea>
 
                     <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-lg transition transform active:scale-95 text-sm">
                         <i class="fa-brands fa-whatsapp text-xl"></i>
@@ -352,7 +355,9 @@
         </div>
     </div>
 
+    <!-- HIDDEN COUPON & INVOICE PRINT TEMPLATES -->
     <div id="invoice-template" class="hidden bg-white p-8 text-black w-[800px]"></div>
+    <div id="coupon-template" class="hidden bg-white p-6 text-black w-[600px] border-4 border-dashed border-amber-500 rounded-2xl"></div>
     <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <script>
@@ -377,6 +382,7 @@
         let appliedDiscount = 0;
         let galleryImages = [];
         let galleryIndex = 0;
+        let customerUploadedPhotoBase64 = "";
 
         const sanitize = (str) => DOMPurify.sanitize(str ? str.trim() : '');
         
@@ -421,6 +427,21 @@
         };
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Feature 1: Customer Photo Preview Handler
+        function previewCustomerPhoto(event) {
+            const file = event.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    customerUploadedPhotoBase64 = e.target.result;
+                    document.getElementById('cust-preview-img').src = customerUploadedPhotoBase64;
+                    document.getElementById('cust-photo-preview-container').classList.remove('hidden');
+                    showToast("Photo uploaded successfully!", "success");
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
         function toggleTrackModal() {
@@ -483,25 +504,24 @@
                 `;
             }).join('');
 
-            // Feature 4: Customer Rating & Review UI inside Tracking Modal if Delivered
+            const estimatedDateStr = order.estimatedDelivery || "3-5 Business Days";
+
+            // Feature 4 & 5: Customer Rating & Direct WhatsApp Tracking Link
             let ratingSection = '';
             if(order.status === 'Delivered') {
                 ratingSection = `
-                    <div class="mt-4 bg-emerald-50 dark:bg-emerald-900/20 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 text-center">
-                        <p class="text-xs font-bold text-emerald-800 dark:text-emerald-300 mb-1">⭐ Rate your FARMORA Experience</p>
-                        <div class="flex justify-center space-x-1 text-amber-400 text-base">
-                            <i class="fa-solid fa-star cursor-pointer hover:scale-125 transition" onclick="showToast('Thank you for your rating!', 'success')"></i>
-                            <i class="fa-solid fa-star cursor-pointer hover:scale-125 transition" onclick="showToast('Thank you for your rating!', 'success')"></i>
-                            <i class="fa-solid fa-star cursor-pointer hover:scale-125 transition" onclick="showToast('Thank you for your rating!', 'success')"></i>
-                            <i class="fa-solid fa-star cursor-pointer hover:scale-125 transition" onclick="showToast('Thank you for your rating!', 'success')"></i>
-                            <i class="fa-solid fa-star cursor-pointer hover:scale-125 transition" onclick="showToast('Thank you for your rating!', 'success')"></i>
+                    <div class="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-200 text-center">
+                        <p class="text-xs font-bold text-amber-800 dark:text-amber-300 mb-1">Rate your FARMORA Experience ⭐</p>
+                        <div class="flex justify-center space-x-2 text-amber-500 text-lg cursor-pointer">
+                            <i class="fa-solid fa-star" onclick="showToast('Thank you for your 5-star rating!', 'success')"></i>
+                            <i class="fa-solid fa-star" onclick="showToast('Thank you for your 5-star rating!', 'success')"></i>
+                            <i class="fa-solid fa-star" onclick="showToast('Thank you for your 5-star rating!', 'success')"></i>
+                            <i class="fa-solid fa-star" onclick="showToast('Thank you for your 5-star rating!', 'success')"></i>
+                            <i class="fa-solid fa-star" onclick="showToast('Thank you for your 5-star rating!', 'success')"></i>
                         </div>
-                        <p class="text-[10px] text-gray-500 mt-1">Thank you for letting us frame your memories!</p>
                     </div>
                 `;
             }
-
-            const estimatedDateStr = order.estimatedDelivery || "3-5 Business Days";
 
             container.innerHTML = `
                 <div class="bg-gray-50 dark:bg-gray-900 p-5 rounded-2xl border dark:border-gray-700 shadow-inner mt-4">
@@ -603,7 +623,6 @@
             itemsToRender.forEach(prod => {
                 const stockVal = prod.stock !== undefined ? prod.stock : 15;
                 const isOutOfStock = stockVal <= 0;
-                const isLowStock = stockVal > 0 && stockVal < 4;
                 const isWished = wishlist.includes(prod.id);
                 
                 const sizeOptions = (prod.sizes || []).map((s, idx) => `<option value="${idx}">${s.label} - ₹${s.price}</option>`).join('');
@@ -620,9 +639,9 @@
                         </div>
                         
                         <div class="p-4 flex-1 flex flex-col">
-                            <div class="flex justify-between items-center">
+                            <div class="flex justify-between items-start">
                                 <span class="text-[10px] font-black uppercase tracking-wider text-amber-600 bg-amber-50 dark:bg-amber-900/40 px-2.5 py-1 rounded-lg">${prod.category}</span>
-                                <span class="text-xs font-bold ${isLowStock ? 'text-red-500 animate-pulse' : 'text-gray-400 dark:text-gray-500'}">Stock: ${stockVal}</span>
+                                <span class="text-xs font-semibold text-gray-400 dark:text-gray-500">Stock: ${stockVal}</span>
                             </div>
                             <h3 class="font-extrabold text-gray-800 dark:text-gray-100 text-base mt-2 leading-snug">${prod.title}</h3>
                             <p class="text-gray-500 dark:text-gray-400 text-xs mt-1.5 line-clamp-2 flex-1">${prod.description}</p>
@@ -750,18 +769,23 @@
 
         function applyPromoCode() {
             const code = document.getElementById('promo-input').value.trim().toUpperCase();
-            if (code === "DISCOUNT10") {
+            
+            // Check active owner coupons
+            let activeCoupons = JSON.parse(localStorage.getItem('farm_owner_coupons')) || [];
+            const foundCoupon = activeCoupons.find(c => c.code === code && new Date(c.expiry) >= new Date());
+
+            if (foundCoupon) {
+                appliedDiscount = foundCoupon.discount;
+                showToast(`Exclusive 2-Week Coupon Applied (${foundCoupon.discount}% OFF)!`, "success");
+            } else if (code === "DISCOUNT10") {
                 appliedDiscount = 10;
                 showToast("10% FARMORA Discount Applied!", "success");
             } else if (code === "FRAME20") {
                 appliedDiscount = 20;
                 showToast("20% FARMORA Discount Applied!", "success");
-            } else if (code.startsWith("FARMORA15-")) {
-                appliedDiscount = 15;
-                showToast("15% Return Gift Coupon Applied!", "success");
             } else {
                 appliedDiscount = 0;
-                showToast("Invalid or Expired Promo Code", "error");
+                showToast("Invalid or Expired Coupon Code", "error");
             }
             updateCartUI();
         }
@@ -863,21 +887,13 @@
             const estDate = new Date();
             estDate.setDate(estDate.getDate() + 5);
             const estDateFormatted = estDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            
-            // 2-Week (14 Days) Expiry Coupon Code for Next Order
-            const couponCode = `FARMORA15-${orderId}`;
-            const couponExpiryDate = new Date();
-            couponExpiryDate.setDate(couponExpiryDate.getDate() + 14);
-            const couponExpiryFormatted = couponExpiryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            
             const orderDateFormatted = new Date().toLocaleString();
 
             const newOrder = {
                 id: orderId, date: orderDateFormatted, name, phone, address, note: customText,
                 items: [...cart], shipping: shippingFee, total: grandTotal, otp: deliveryOtp, status: "Pending",
                 estimatedDelivery: estDateFormatted,
-                couponCode: couponCode,
-                couponExpiry: couponExpiryFormatted,
+                customerPhoto: customerUploadedPhotoBase64,
                 trackingHistory: [
                     { status: "Pending", time: orderDateFormatted, remark: "Order Placed Successfully via FARMORA" }
                 ]
@@ -887,18 +903,19 @@
             savedOrders.unshift(newOrder);
             localStorage.setItem('farm_orders', JSON.stringify(savedOrders));
 
-            const message = `🌿 *FARMORA NEW ORDER #${orderId}* 🌿\n\n👤 *Customer Details:*\n- *Name:* ${name}\n- *Phone:* ${phone}\n- *Address:* ${address}\n\n📦 *Items Ordered:*\n${itemsFormatted}🚚 *Shipping:* ${shippingFee === 0 ? 'Standard (Free)' : 'Express (+₹50)'}\n📝 *Customization Details:*\n"${customText}"\n\n💰 *Total Amount:* ₹${grandTotal}\n📅 *Estimated Delivery:* ${estDateFormatted}\n🔐 *Secret Delivery OTP:* *${deliveryOtp}*`;
+            const message = `🌿 *FARMORA NEW ORDER #${orderId}* 🌿\n\n👤 *Customer Details:*\n- *Name:* ${name}\n- *Phone:* ${phone}\n- *Address:* ${address}\n\n📦 *Items Ordered:*\n${itemsFormatted}🚚 *Shipping:* ${shippingFee === 0 ? 'Standard (Free)' : 'Express (+₹50)'}\n📝 *Customization Details:*\n"${customText}"\n${customerUploadedPhotoBase64 ? '📷 *Custom Photo Attached for Printing*' : ''}\n\n💰 *Total Amount:* ₹${grandTotal}\n📅 *Estimated Delivery:* ${estDateFormatted}\n🔐 *Secret Delivery OTP:* *${deliveryOtp}*`;
 
             window.open(`https://wa.me/${MY_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
 
             cart = [];
             appliedDiscount = 0;
+            customerUploadedPhotoBase64 = "";
             updateCartUI();
             document.getElementById('checkout-form').reset();
+            document.getElementById('cust-photo-preview-container').classList.add('hidden');
             toggleCartModal(false);
             renderProducts(products);
             renderFeaturedCarousel();
-            showToast("Order placed successfully!", "success");
         }
 
         let clickCount = 0; let clickTimer;
@@ -945,36 +962,7 @@
             container.appendChild(row);
         }
 
-        // Print Coupon Card Function for Owner
-        function printCouponCard(code, expiry) {
-            const w = window.open('', '_blank');
-            w.document.write(`
-                <html><head><title>FARMORA Return Gift Coupon</title><style>body{font-family:sans-serif;text-align:center;padding:50px;background:#f8fafc;} .card{border:4px dashed #d97706;padding:40px;border-radius:24px;max-width:420px;margin:auto;background:white;box-shadow:0 10px 25px rgba(0,0,0,0.1);} h1{color:#0f172a;margin-bottom:2px;} .code{font-size:26px;font-weight:900;background:#fef3c7;color:#92400e;padding:12px 24px;display:inline-block;border-radius:12px;margin:15px 0;letter-spacing:2px;} p{color:#64748b;font-size:13px;}</style></head>
-                <body>
-                    <div class="card">
-                        <h1>FAR<span style="color:#d97706">MORA</span></h1>
-                        <p style="font-weight:bold;color:#d97706;text-transform:uppercase;letter-spacing:1px;font-size:10px;">Frame Your Memories, Beautify Your Spaces</p>
-                        <h3 style="margin-top:25px;color:#1e293b;">Special 15% OFF Next Order Coupon</h3>
-                        <div class="code">${code}</div>
-                        <p>Valid for your next purchase until <strong>${expiry}</strong> (14 Days validity).</p>
-                        <p style="margin-top:30px;font-size:11px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:15px;">~ Authorized by Naveed ~ FARMORA ~</p>
-                    </div>
-                    <script>window.print();</script>
-                </body></html>
-            `);
-            w.document.close();
-        }
-
-        // Feature 5: Quick Copy Order Details for Owner
-        function copyOrderDetails(orderId) {
-            let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
-            const order = orders.find(o => o.id === orderId);
-            if(!order) return;
-            const text = `FARMORA Order #${order.id}\nName: ${order.name}\nPhone: ${order.phone}\nAddress: ${order.address}\nTotal: ₹${order.total}\nItems: ${order.items.map(i=>i.quantity+'x '+i.title+' ('+i.size+')').join(', ')}`;
-            navigator.clipboard.writeText(text);
-            showToast("Order details copied to clipboard!", "success");
-        }
-
+        // Feature: Owner Dashboard with 2-Week Coupon Generation & Quick Copy Details
         function renderAdminOrders(filterStatus = 'All') {
             let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
             
@@ -1006,25 +994,17 @@
                             </select>
                         </div>
                         <div class="flex space-x-2">
-                            <button onclick="copyOrderDetails(${order.id})" class="text-emerald-500 hover:text-emerald-700 p-1" title="Copy Details"><i class="fa-solid fa-copy"></i></button>
-                            <button onclick="downloadInvoice(${order.id})" class="text-blue-500 hover:text-blue-700 p-1" title="PDF Invoice"><i class="fa-solid fa-file-pdf"></i></button>
-                            <button onclick="deleteOrder(${order.id})" class="text-red-400 hover:text-red-600 p-1" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="copyOrderDetails(${order.id})" class="text-amber-500 hover:text-amber-700 p-1" title="Quick Copy Details"><i class="fa-solid fa-copy"></i></button>
+                            <button onclick="generateAndPrintCoupon(${order.id})" class="text-emerald-500 hover:text-emerald-700 p-1" title="Print 2-Week Coupon"><i class="fa-solid fa-ticket"></i></button>
+                            <button onclick="downloadInvoice(${order.id})" class="text-blue-500 hover:text-blue-700 p-1" title="Download Invoice"><i class="fa-solid fa-file-pdf"></i></button>
+                            <button onclick="deleteOrder(${order.id})" class="text-red-400 hover:text-red-600 p-1"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                     <div class="space-y-1 mb-3 text-gray-700 dark:text-gray-300">
                         <p><i class="fa-solid fa-user text-gray-400 w-5"></i> <span class="font-bold">${order.name}</span> (${order.phone})</p>
                         <p><i class="fa-solid fa-location-dot text-red-400 w-5"></i> ${order.address}</p>
+                        ${order.customerPhoto ? `<div class="mt-2 flex items-center space-x-2"><img src="${order.customerPhoto}" class="w-12 h-12 object-cover rounded-lg border"><span class="text-xs text-amber-600 font-bold">Custom Photo Uploaded</span></div>` : ''}
                     </div>
-
-                    <!-- Exclusive 2-Week Coupon Visible Only to Owner -->
-                    <div class="mb-3 bg-amber-50 dark:bg-amber-900/30 p-3 rounded-xl border border-amber-200 dark:border-amber-800 flex justify-between items-center text-xs">
-                        <div>
-                            <span class="font-black text-amber-800 dark:text-amber-300">🎁 2-Week Coupon: <code class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded font-mono font-bold">${order.couponCode || 'FARMORA15-' + order.id}</code></span>
-                            <p class="text-[10px] text-amber-600 dark:text-amber-400">Valid until: ${order.couponExpiry || '14 Days'} (15% OFF)</p>
-                        </div>
-                        <button onclick="printCouponCard('${order.couponCode || 'FARMORA15-' + order.id}', '${order.couponExpiry || '14 Days'}')" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold px-3 py-1.5 rounded-lg text-xs shadow transition">Print Card</button>
-                    </div>
-
                     <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded-xl border dark:border-gray-700 mb-3">
                         <ul class="space-y-1">
                             ${order.items.map(i => `<li class="flex justify-between text-xs text-gray-600 dark:text-gray-400"><span>${i.quantity}x ${i.title} (${i.size})</span> <span>₹${i.price * i.quantity}</span></li>`).join('')}
@@ -1036,6 +1016,61 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        function copyOrderDetails(orderId) {
+            let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
+            const order = orders.find(o => o.id === orderId);
+            if(!order) return;
+            const text = `Order #${order.id}\nName: ${order.name}\nPhone: ${order.phone}\nAddress: ${order.address}\nTotal: ₹${order.total}`;
+            navigator.clipboard.writeText(text);
+            showToast("Order details copied to clipboard!", "success");
+        }
+
+        // Exclusive 2-Week Owner Coupon Generator & Printable Card
+        function generateAndPrintCoupon(orderId) {
+            let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
+            const order = orders.find(o => o.id === orderId);
+            if(!order) return;
+
+            const randomCode = 'FARM' + Math.floor(1000 + Math.random() * 9000);
+            const discountPercent = 15; // 15% discount for next order
+            
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 14); // Exactly 2 Weeks (14 Days)
+            const expiryFormatted = expiryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+            // Save coupon to localStorage so it validates at checkout
+            let activeCoupons = JSON.parse(localStorage.getItem('farm_owner_coupons')) || [];
+            activeCoupons.push({ code: randomCode, discount: discountPercent, expiry: expiryDate.toISOString() });
+            localStorage.setItem('farm_owner_coupons', JSON.stringify(activeCoupons));
+
+            const couponTemplate = document.getElementById('coupon-template');
+            couponTemplate.innerHTML = `
+                <div class="text-center p-6 bg-gradient-to-br from-amber-50 to-white">
+                    <h2 class="text-2xl font-black text-slate-900">FAR<span class="text-amber-600">MORA</span></h2>
+                    <p class="text-[10px] font-bold tracking-widest text-amber-700 uppercase mb-4">~ Exclusive Thank You Gift ~</p>
+                    <div class="bg-slate-900 text-amber-400 py-3 px-6 rounded-2xl text-xl font-black tracking-widest mb-3 shadow-md">
+                        ${randomCode}
+                    </div>
+                    <p class="text-sm font-extrabold text-gray-800 mb-1">Get ${discountPercent}% OFF on your next order!</p>
+                    <p class="text-xs text-red-500 font-bold mb-6">Valid only until: ${expiryFormatted} (2 Weeks)</p>
+                    <div class="border-t pt-4 text-[10px] text-gray-400">
+                        <p>Present this coupon code at FARMORA checkout.</p>
+                        <p>Customer: ${order.name} | Order #${order.id}</p>
+                    </div>
+                </div>
+            `;
+            couponTemplate.classList.remove('hidden');
+
+            showToast("Generating 2-Week Printable Coupon...", "info");
+            html2pdf().set({ margin: 0.5, filename: `FARMORA_Coupon_${randomCode}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a5', orientation: 'landscape' } }).from(couponTemplate).save().then(() => {
+                couponTemplate.classList.add('hidden');
+                showToast(`Coupon ${randomCode} generated successfully!`, "success");
+            }).catch(() => {
+                couponTemplate.classList.add('hidden');
+                showToast("Failed coupon generation", "error");
+            });
         }
 
         function updateOrderStatus(orderId, newStatus) {
@@ -1084,8 +1119,8 @@
             let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
             if(orders.length === 0) return showToast("No data to export", "error");
             
-            let csvContent = "data:text/csv;charset=utf-8,ID,Date,Name,Phone,Status,Total,Coupon\n";
-            orders.forEach(o => { csvContent += `${o.id},"${o.date}","${o.name}",${o.phone},${o.status},${o.total},${o.couponCode || ''}\n`; });
+            let csvContent = "data:text/csv;charset=utf-8,ID,Date,Name,Phone,Status,Total\n";
+            orders.forEach(o => { csvContent += `${o.id},"${o.date}","${o.name}",${o.phone},${o.status},${o.total}\n`; });
             
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -1136,11 +1171,11 @@
                 html2pdf().set({ margin: 0.5, filename: `FARMORA_Invoice_${order.id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(template).save().then(() => {
                     template.classList.add('hidden');
                     showToast("Invoice downloaded successfully!");
-                }).catch(err => {
+                }).catch(() => {
                     template.classList.add('hidden');
                     showToast("Failed PDF generation", "error");
                 });
-            } catch (err) {
+            } catch {
                 template.classList.add('hidden');
                 showToast("PDF generation exception", "error");
             }
@@ -1167,7 +1202,7 @@
                         <div>
                             <h4 class="font-bold text-gray-800 dark:text-gray-100 flex items-center">
                                 ${p.title}
-                                ${isLowStock ? `<span class="ml-2 w-2 h-2 rounded-full bg-red-500 animate-ping"></span>` : ''}
+                                ${isLowStock ? `<span class="ml-2 px-2 py-0.5 bg-red-500 text-white rounded text-[9px] font-black animate-pulse">Low Stock</span>` : ''}
                             </h4>
                             <span class="${isLowStock ? 'text-red-500 font-bold' : 'text-amber-600'}">Stock: ${stockVal}</span>
                         </div>
@@ -1233,7 +1268,7 @@
                         } else {
                             throw new Error("ImgBB API rejected");
                         }
-                    } catch (err) {
+                    } catch {
                         imageUrl = await new Promise(res => { 
                             const r = new FileReader(); 
                             r.onload = e => res(e.target.result); 
