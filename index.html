@@ -141,7 +141,7 @@
         <i class="fa-solid fa-arrow-up text-lg"></i>
     </button>
 
-    <!-- FOOTER -->
+    <!-- FOOTER WITH FUNCTIONAL POLICIES -->
     <footer class="bg-slate-900 text-gray-300 py-12 border-t border-slate-800 mt-12 text-sm">
         <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div class="space-y-3">
@@ -149,7 +149,7 @@
                     <img src="IMG-20261030-WA0072.jpg" alt="FARMORA Logo" class="w-11 h-11 rounded-full object-cover border-2 border-amber-400 shadow-md">
                     <span class="text-2xl font-black tracking-wider text-white">FAR<span class="text-amber-400">MORA</span></span>
                 </div>
-                <p class="text-xs text-gray-400 leading-relaxed">Personalized gifts and thoughtful accessories, made with care in Kashmir[span_1](start_span)[span_1](end_span).</p>
+                <p class="text-xs text-gray-400 leading-relaxed">Personalized gifts and thoughtful accessories, made with care in Kashmir[span_0](start_span)[span_0](end_span).</p>
                 <p class="text-xs text-amber-400 font-bold"><i class="fa-solid fa-camera mr-1"></i> @farmora_store</p>
             </div>
 
@@ -158,9 +158,9 @@
                 <ul class="space-y-2 text-xs text-gray-400">
                     <li><a href="#" onclick="filterCategory('All'); scrollToTop();" class="hover:text-amber-400 transition">Home</a></li>
                     <li><a href="#" onclick="filterCategory('All'); scrollToTop();" class="hover:text-amber-400 transition">Shop All</a></li>
-                    <li><a href="#" onclick="showToast('FARMORA crafted with absolute love in Kashmir!', 'info')" class="hover:text-amber-400 transition">About Us</a></li>
+                    <li><a href="#" onclick="openPolicyModal('About Us', 'FARMORA is a premium customized gifting brand founded in Kashmir[span_1](start_span)[span_1](end_span). We specialize in high-end photo frames, magic mugs, acrylic creations, and memorable keepsakes crafted with absolute precision and love.')" class="hover:text-amber-400 transition">About Us</a></li>
                     <li><a href="https://wa.me/919906764541" target="_blank" class="hover:text-amber-400 transition">Contact</a></li>
-                    <li><a href="#" onclick="showToast('For support, message us directly on WhatsApp!', 'info')" class="hover:text-amber-400 transition">FAQs</a></li>
+                    <li><a href="#" onclick="openPolicyModal('FAQs', 'Q: How do I customize my order?\nA: Simply upload your photo during checkout or send your custom text and details via WhatsApp.\n\nQ: What is the delivery time?\nA: Standard delivery takes 3-5 business days across India.\n\nQ: Are custom prints secure?\nA: Yes, all uploaded customer photos are completely confidential and deleted after order fulfillment.')" class="hover:text-amber-400 transition">FAQs</a></li>
                 </ul>
             </div>
 
@@ -182,11 +182,11 @@
                 <ul class="space-y-2 text-xs text-gray-400">
                     <li><i class="fa-solid fa-location-dot mr-1 text-amber-500"></i> Kashmir, India[span_2](start_span)[span_2](end_span)</li>
                     <li><a href="mailto:support@farmora.com" class="hover:text-amber-400 transition"><i class="fa-solid fa-envelope mr-1 text-amber-500"></i> Write to us</a></li>
-                    <li><a href="#" onclick="showToast('Privacy Policy: All custom photos are kept strictly secure.', 'info')" class="hover:text-amber-400 transition">Privacy Policy</a></li>
-                    <li><a href="#" onclick="showToast('Terms: Custom orders are processed upon confirmation.', 'info')" class="hover:text-amber-400 transition">Terms & Conditions</a></li>
-                    <li><a href="#" onclick="showToast('Shipping across India with secure packaging.', 'info')" class="hover:text-amber-400 transition">Shipping Policy</a></li>
-                    <li><a href="#" onclick="showToast('Returns accepted for transit damages with unboxing video.', 'info')" class="hover:text-amber-400 transition">Returns & Refunds</a></li>
-                    <li><a href="#" onclick="showToast('Orders can be cancelled before processing starts.', 'info')" class="hover:text-amber-400 transition">Cancellation Policy</a></li>
+                    <li><a href="#" onclick="openPolicyModal('Privacy Policy', 'At FARMORA, we take your privacy seriously. All personal details, phone numbers, and uploaded custom photographs are stored securely and used exclusively for manufacturing and delivering your personalized orders. We never share customer data with third parties.')" class="hover:text-amber-400 transition">Privacy Policy</a></li>
+                    <li><a href="#" onclick="openPolicyModal('Terms & Conditions', 'By placing an order on FARMORA, you agree to provide accurate delivery addresses and valid contact information. Custom products are manufactured according to the preview and instructions provided by the customer.')" class="hover:text-amber-400 transition">Terms & Conditions</a></li>
+                    <li><a href="#" onclick="openPolicyModal('Shipping Policy', 'We ship securely across India. Standard orders are dispatched within 24-48 hours and delivered within 3-5 business days. Express shipping options are also available at checkout.')" class="hover:text-amber-400 transition">Shipping Policy</a></li>
+                    <li><a href="#" onclick="openPolicyModal('Returns & Refunds', 'Due to the personalized nature of our products, returns are only accepted in the case of transit damage or manufacturing defects. Customers must provide an unboxing video within 24 hours of delivery to claim a replacement or refund.')" class="hover:text-amber-400 transition">Returns & Refunds</a></li>
+                    <li><a href="#" onclick="openPolicyModal('Cancellation Policy', 'Orders can be cancelled free of charge before production or processing begins (usually within 2 hours of placing the order). Once customization has started, orders cannot be cancelled.')" class="hover:text-amber-400 transition">Cancellation Policy</a></li>
                 </ul>
             </div>
         </div>
@@ -196,6 +196,22 @@
             <p class="mt-2 sm:mt-0 font-semibold text-amber-400">Design & Developed by Mautasim[span_3](start_span)[span_3](end_span)</p>
         </div>
     </footer>
+
+    <!-- POLICY & INFO MODAL -->
+    <div id="policy-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="bg-slate-900 p-4 flex justify-between items-center text-white">
+                <h3 id="policy-modal-title" class="text-base font-bold text-amber-400">Policy</h3>
+                <button onclick="closePolicyModal()" class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <p id="policy-modal-content" class="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line"></p>
+            </div>
+            <div class="p-4 bg-gray-50 dark:bg-gray-900 border-t dark:border-gray-700 text-right">
+                <button onclick="closePolicyModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-5 py-2 rounded-xl text-xs transition">Close</button>
+            </div>
+        </div>
+    </div>
 
     <!-- GALLERY MODAL -->
     <div id="gallery-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4">
@@ -437,6 +453,16 @@
                 toast.style.transition = 'opacity 0.3s ease';
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
+        }
+
+        function openPolicyModal(title, text) {
+            document.getElementById('policy-modal-title').innerText = title;
+            document.getElementById('policy-modal-content').innerText = text;
+            document.getElementById('policy-modal').classList.remove('hidden');
+        }
+
+        function closePolicyModal() {
+            document.getElementById('policy-modal').classList.add('hidden');
         }
 
         function initTheme() {
