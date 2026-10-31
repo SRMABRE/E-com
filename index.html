@@ -64,11 +64,9 @@
 
     <!-- NAVIGATION BAR -->
     <header class="sticky top-0 z-40 bg-slate-900 border-b border-amber-500/30 text-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer prevent-zoom" onclick="triggerAdmin()" title="Secret Admin Trigger">
-                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center shadow-md border-2 border-amber-300">
-                    <i class="fa-solid fa-gem text-slate-900 text-lg"></i>
-                </div>
+                <img src="IMG-20261030-WA0072_c198cb.jpg" alt="FARMORA Logo" class="w-11 h-11 rounded-full object-cover border-2 border-amber-400 shadow-md">
                 <div>
                     <span class="text-2xl font-black tracking-wider text-white">FAR<span class="gold-shimmer">MORA</span></span>
                     <p class="text-[9px] tracking-widest uppercase text-amber-400 font-semibold -mt-1">Frame Your Memories</p>
@@ -97,14 +95,14 @@
     <!-- MAIN CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 py-6 min-h-screen">
         <!-- HERO BANNER -->
-        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-12 mb-10 shadow-2xl relative overflow-hidden border border-amber-500/20 banner-float">
-            <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl text-amber-400 pointer-events-none">
-                <i class="fa-solid fa-photo-film"></i>
-            </div>
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 mb-10 shadow-2xl relative overflow-hidden border border-amber-500/20 banner-float flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="relative z-10 max-w-2xl">
                 <span class="bg-amber-400/20 border border-amber-400 text-amber-300 text-xs font-black uppercase px-3 py-1.5 rounded-full tracking-wider backdrop-blur-sm">~ FARMORA Signature Collection</span>
-                <h1 class="text-3xl sm:text-6xl font-black mt-3 leading-tight tracking-tight">Frame Your Memories, <span class="gold-shimmer">Beautify Your Spaces</span></h1>
+                <h1 class="text-3xl sm:text-5xl font-black mt-3 leading-tight tracking-tight">Frame Your Memories, <span class="gold-shimmer">Beautify Your Spaces</span></h1>
                 <p class="text-gray-300 text-sm sm:text-base mt-3 leading-relaxed">Discover exquisite handcrafted frames, personalized gifts, and magical memories designed for your loved ones.</p>
+            </div>
+            <div class="relative z-10 flex-shrink-0">
+                <img src="IMG-20261030-WA0072_c198cb.jpg" alt="FARMORA Emblem" class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-amber-400 shadow-2xl object-cover">
             </div>
         </div>
 
@@ -144,7 +142,8 @@
     </button>
 
     <footer class="bg-slate-900 text-gray-400 py-10 text-center text-sm border-t border-slate-800 mt-12">
-        <div class="max-w-7xl mx-auto px-4">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col items-center">
+            <img src="IMG-20261030-WA0072_c198cb.jpg" alt="FARMORA Logo" class="w-14 h-14 rounded-full border-2 border-amber-400 mb-2 object-cover">
             <h2 class="text-xl font-black text-white tracking-widest mb-1">FAR<span class="text-amber-400">MORA</span></h2>
             <p class="text-xs tracking-wider uppercase text-amber-500/80 font-bold mb-4">~ Frame Your Memories, Beautify Your Spaces ~</p>
             <p class="text-xs max-w-md mx-auto mb-6 text-gray-400">Premium customized photo frames, magic mugs, and everlasting gifts crafted with absolute precision.</p>
@@ -153,7 +152,7 @@
                 <a href="#" class="hover:text-amber-400 transition text-xl"><i class="fa-brands fa-facebook"></i></a>
                 <a href="#" class="hover:text-amber-400 transition text-xl"><i class="fa-brands fa-whatsapp"></i></a>
             </div>
-            <div class="border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500">
+            <div class="border-t border-slate-800 pt-6 w-full flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500">
                 <p>&copy; <span id="year"></span> FARMORA. All Rights Reserved.</p>
                 <p class="mt-2 sm:mt-0 font-semibold text-amber-400">Engineered with ❤️ for Naveed ~ FARMORA</p>
             </div>
@@ -190,7 +189,10 @@
     <div id="admin-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="bg-amber-500 p-4 flex justify-between items-center text-slate-900">
-                <h2 class="text-xl font-extrabold"><i class="fa-solid fa-lock mr-2"></i>FARMORA Owner Dashboard</h2>
+                <div class="flex items-center space-x-2">
+                    <img src="IMG-20261030-WA0072_c198cb.jpg" class="w-7 h-7 rounded-full object-cover border border-slate-900">
+                    <h2 class="text-xl font-extrabold">FARMORA Owner Dashboard</h2>
+                </div>
                 <button onclick="toggleAdminModal()" class="text-slate-900 text-2xl font-bold">&times;</button>
             </div>
 
@@ -298,7 +300,7 @@
     <div id="cart-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex justify-end">
         <div class="bg-white dark:bg-gray-800 w-full max-w-lg h-full shadow-2xl flex flex-col justify-between overflow-hidden">
             <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
-                <h2 class="text-lg font-bold"><i class="fa-solid fa-bag-shopping text-amber-400 mr-2"></i> Your Shopping Bag</h2>
+                <h2 class="text-lg font-bold flex items-center"><i class="fa-solid fa-bag-shopping text-amber-400 mr-2"></i> Your Shopping Bag</h2>
                 <div class="flex items-center space-x-3">
                     <button onclick="clearCart()" class="text-xs bg-red-600/80 hover:bg-red-600 text-white px-2.5 py-1 rounded-lg flex items-center gap-1 transition"><i class="fa-solid fa-trash"></i> Empty</button>
                     <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
@@ -334,7 +336,7 @@
                     <input type="tel" id="cust-phone" pattern="[0-9]{10}" title="Please enter exactly 10 digits" placeholder="WhatsApp Number (10 Digits) *" required class="w-full text-xs p-3 border dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none">
                     <textarea id="cust-address" placeholder="Complete Delivery Address *" rows="2" required class="w-full text-xs p-3 border dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-400 outline-none"></textarea>
                     
-                    <!-- Feature 1: Photo Upload Preview for Customer -->
+                    <!-- Customer Photo Upload Preview -->
                     <div>
                         <label class="block text-[11px] font-bold text-gray-600 dark:text-gray-300 mb-1">Upload Photo to Preview & Print</label>
                         <input type="file" id="cust-photo-upload" accept="image/*" onchange="previewCustomerPhoto(event)" class="w-full text-xs p-2 border dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-amber-100 file:text-amber-800">
@@ -355,7 +357,7 @@
         </div>
     </div>
 
-    <!-- HIDDEN COUPON & INVOICE PRINT TEMPLATES -->
+    <!-- PRINT TEMPLATES WITH LOGO -->
     <div id="invoice-template" class="hidden bg-white p-8 text-black w-[800px]"></div>
     <div id="coupon-template" class="hidden bg-white p-6 text-black w-[600px] border-4 border-dashed border-amber-500 rounded-2xl"></div>
     <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
@@ -429,7 +431,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Feature 1: Customer Photo Preview Handler
         function previewCustomerPhoto(event) {
             const file = event.target.files[0];
             if(file) {
@@ -506,7 +507,6 @@
 
             const estimatedDateStr = order.estimatedDelivery || "3-5 Business Days";
 
-            // Feature 4 & 5: Customer Rating & Direct WhatsApp Tracking Link
             let ratingSection = '';
             if(order.status === 'Delivered') {
                 ratingSection = `
@@ -770,7 +770,6 @@
         function applyPromoCode() {
             const code = document.getElementById('promo-input').value.trim().toUpperCase();
             
-            // Check active owner coupons
             let activeCoupons = JSON.parse(localStorage.getItem('farm_owner_coupons')) || [];
             const foundCoupon = activeCoupons.find(c => c.code === code && new Date(c.expiry) >= new Date());
 
@@ -903,7 +902,7 @@
             savedOrders.unshift(newOrder);
             localStorage.setItem('farm_orders', JSON.stringify(savedOrders));
 
-            const message = `🌿 *FARMORA NEW ORDER #${orderId}* 🌿\n\n👤 *Customer Details:*\n- *Name:* ${name}\n- *Phone:* ${phone}\n- *Address:* ${address}\n\n📦 *Items Ordered:*\n${itemsFormatted}🚚 *Shipping:* ${shippingFee === 0 ? 'Standard (Free)' : 'Express (+₹50)'}\n📝 *Customization Details:*\n"${customText}"\n${customerUploadedPhotoBase64 ? '📷 *Custom Photo Attached for Printing*' : ''}\n\n💰 *Total Amount:* ₹${grandTotal}\n📅 *Estimated Delivery:* ${estDateFormatted}\n🔐 *Secret Delivery OTP:* *${deliveryOtp}*`;
+            const message = `🌿 *FARMORA NEW ORDER ID #${orderId}* 🌿\n\n👤 *Customer Details:*\n- *Name:* ${name}\n- *Phone:* ${phone}\n- *Address:* ${address}\n\n📦 *Items Ordered:*\n${itemsFormatted}🚚 *Shipping:* ${shippingFee === 0 ? 'Standard (Free)' : 'Express (+₹50)'}\n📝 *Customization Details:*\n"${customText}"\n${customerUploadedPhotoBase64 ? '📷 *Custom Photo Attached for Printing*' : ''}\n\n💰 *Total Amount:* ₹${grandTotal}\n📅 *Estimated Delivery:* ${estDateFormatted}\n🔐 *Secret Delivery OTP:* *${deliveryOtp}*`;
 
             window.open(`https://wa.me/${MY_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
 
@@ -962,7 +961,6 @@
             container.appendChild(row);
         }
 
-        // Feature: Owner Dashboard with 2-Week Coupon Generation & Quick Copy Details
         function renderAdminOrders(filterStatus = 'All') {
             let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
             
@@ -1027,27 +1025,26 @@
             showToast("Order details copied to clipboard!", "success");
         }
 
-        // Exclusive 2-Week Owner Coupon Generator & Printable Card
         function generateAndPrintCoupon(orderId) {
             let orders = JSON.parse(localStorage.getItem('farm_orders')) || [];
             const order = orders.find(o => o.id === orderId);
             if(!order) return;
 
             const randomCode = 'FARM' + Math.floor(1000 + Math.random() * 9000);
-            const discountPercent = 15; // 15% discount for next order
+            const discountPercent = 15;
             
             const expiryDate = new Date();
-            expiryDate.setDate(expiryDate.getDate() + 14); // Exactly 2 Weeks (14 Days)
+            expiryDate.setDate(expiryDate.getDate() + 14); 
             const expiryFormatted = expiryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
-            // Save coupon to localStorage so it validates at checkout
             let activeCoupons = JSON.parse(localStorage.getItem('farm_owner_coupons')) || [];
             activeCoupons.push({ code: randomCode, discount: discountPercent, expiry: expiryDate.toISOString() });
             localStorage.setItem('farm_owner_coupons', JSON.stringify(activeCoupons));
 
             const couponTemplate = document.getElementById('coupon-template');
             couponTemplate.innerHTML = `
-                <div class="text-center p-6 bg-gradient-to-br from-amber-50 to-white">
+                <div class="text-center p-6 bg-gradient-to-br from-amber-50 to-white relative">
+                    <img src="IMG-20261030-WA0072_c198cb.jpg" class="w-16 h-16 rounded-full border-2 border-amber-500 mx-auto mb-2 object-cover">
                     <h2 class="text-2xl font-black text-slate-900">FAR<span class="text-amber-600">MORA</span></h2>
                     <p class="text-[10px] font-bold tracking-widest text-amber-700 uppercase mb-4">~ Exclusive Thank You Gift ~</p>
                     <div class="bg-slate-900 text-amber-400 py-3 px-6 rounded-2xl text-xl font-black tracking-widest mb-3 shadow-md">
@@ -1140,6 +1137,7 @@
             const template = document.getElementById('invoice-template');
             template.innerHTML = `
                 <div class="border-4 border-slate-900 p-8 m-4 relative bg-white">
+                    <img src="IMG-20261030-WA0072_c198cb.jpg" class="w-16 h-16 rounded-full border-2 border-amber-500 mb-2 object-cover">
                     <h1 class="text-3xl font-black text-slate-900 mb-1">FAR<span class="text-amber-500">MORA</span></h1>
                     <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-8">~ Frame Your Memories, Beautify Your Spaces ~</p>
                     <div class="absolute top-8 right-8 text-right">
