@@ -59,21 +59,28 @@
             animation: shimmerGold 4s linear infinite;
         }
 
-        /* Typing Effect for Mautasim */
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
+        /* Professional Ultra-Cool Developer Animation for Mautasim */
+        @keyframes proGlow {
+            0%, 100% { text-shadow: 0 0 15px rgba(251, 191, 36, 0.6), 0 0 30px rgba(245, 158, 11, 0.4); transform: scale(1); }
+            50% { text-shadow: 0 0 25px rgba(251, 191, 36, 0.95), 0 0 45px rgba(245, 158, 11, 0.7); transform: scale(1.04); }
         }
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: #fbbf24; }
-        }
-        .typing-name {
+        .pro-dev-badge {
             display: inline-block;
-            overflow: hidden;
-            border-right: 2px solid #fbbf24;
-            white-space: nowrap;
-            animation: typing 3.5s steps(30, end) infinite, blink-caret 0.75s step-end infinite;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            animation: proGlow 3s ease-in-out infinite;
+        }
+        .pro-dev-text {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b, #fef3c7, #fbbf24);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            animation: shimmerGold 4s linear infinite;
+            font-weight: 900;
+            letter-spacing: 0.05em;
         }
     </style>
 </head>
@@ -210,7 +217,9 @@
 
         <div class="max-w-7xl mx-auto px-4 border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500">
             <p>&copy; <span id="year"></span> FARMORA. Founded by Naveed in Kashmir.</p>
-            <p class="mt-2 sm:mt-0 font-extrabold text-sm text-amber-400 tracking-wide">Design & Developed by <span class="typing-name text-amber-300 font-black px-1">Mautasim</span></p>
+            <div class="mt-3 sm:mt-0 pro-dev-badge">
+                <span class="pro-dev-text text-xs">✨ Design & Developed by Mautasim ✨</span>
+            </div>
         </div>
     </footer>
 
@@ -432,9 +441,9 @@
         </div>
     </div>
 
-    <!-- PRINT TEMPLATES WITH LOGO -->
-    <div id="invoice-template" class="hidden bg-white p-8 text-black w-[800px] absolute -left-[9999px]"></div>
-    <div id="coupon-template" class="hidden bg-white p-6 text-black w-[600px] border-4 border-dashed border-amber-500 rounded-2xl absolute -left-[9999px]"></div>
+    <!-- PRINT TEMPLATES WITH SOLID WHITE BACKGROUND FOR PERFECT PDF RENDERING -->
+    <div id="invoice-template" class="hidden bg-white text-black p-8 w-[800px] absolute -left-[9999px]" style="background-color: #ffffff !important; color: #000000 !important;"></div>
+    <div id="coupon-template" class="hidden bg-white text-black p-8 w-[600px] absolute -left-[9999px]" style="background-color: #ffffff !important; color: #000000 !important;"></div>
     <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <script>
@@ -924,13 +933,11 @@
             else modal.classList.toggle('hidden');
         }
 
-        // SMART DISTRICT & VILLAGE WISE DELIVERY ESTIMATION RELATIVE TO KHURHAMA
         function calculateEstimatedDeliveryByDistance(addressStr) {
             const addr = addressStr.toLowerCase();
             const estDate = new Date();
             
-            // Immediate local / village range relative to Khurhama, Trehgam, Kupwara
-            if (addr.includes('khurhama') || addr.includes('trehgam') || addr.includes(' Kralpora')) {
+            if (addr.includes('khurhama') || addr.includes('trehgam') || addr.includes('kralpora')) {
                 estDate.setDate(estDate.getDate() + 1);
                 return { days: "1 Day (Immediate Dispatch from Khurhama)", date: estDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) };
             } else if (addr.includes('kupwara') || addr.includes('shandara') || addr.includes('regipora') || addr.includes('lugri')) {
@@ -1150,16 +1157,15 @@
 
             const couponTemplate = document.getElementById('coupon-template');
             couponTemplate.innerHTML = `
-                <div class="text-center p-8 bg-gradient-to-br from-amber-50 to-white relative w-full">
-                    <img src="IMG-20261030-WA0072.jpg" class="w-16 h-16 rounded-full border-2 border-amber-500 mx-auto mb-2 object-cover">
-                    <h2 class="text-2xl font-black text-slate-900">FAR<span class="text-amber-600">MORA</span></h2>
-                    <p class="text-[10px] font-bold tracking-widest text-amber-700 uppercase mb-4">~ Exclusive Thank You Gift ~</p>
-                    <div class="bg-slate-900 text-amber-400 py-3 px-6 rounded-2xl text-xl font-black tracking-widest mb-3 shadow-md inline-block">
+                <div style="background-color: #ffffff !important; color: #000000 !important; text-align: center; padding: 30px; font-family: sans-serif; border: 4px dashed #d97706; border-radius: 16px;">
+                    <h2 style="font-size: 26px; font-weight: 900; color: #0f172a; margin-bottom: 5px;">FARMORA</h2>
+                    <p style="font-size: 11px; font-weight: bold; color: #b45309; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">~ Exclusive Thank You Gift ~</p>
+                    <div style="background-color: #0f172a; color: #fbbf24; padding: 12px 24px; border-radius: 12px; font-size: 22px; font-weight: 900; letter-spacing: 3px; display: inline-block; margin-bottom: 15px;">
                         ${randomCode}
                     </div>
-                    <p class="text-sm font-extrabold text-gray-800 mb-1">Get ${discountPercent}% OFF on your next order!</p>
-                    <p class="text-xs text-red-500 font-bold mb-6">Valid only until: ${expiryFormatted} (2 Weeks)</p>
-                    <div class="border-t pt-4 text-[10px] text-gray-400">
+                    <p style="font-size: 14px; font-weight: 800; color: #1f2937; margin-bottom: 5px;">Get ${discountPercent}% OFF on your next order!</p>
+                    <p style="font-size: 12px; color: #dc2626; font-weight: bold; margin-bottom: 25px;">Valid only until: ${expiryFormatted} (2 Weeks)</p>
+                    <div style="border-top: 1px solid #e5e7eb; padding-top: 15px; font-size: 11px; color: #6b7280;">
                         <p>Present this coupon code at FARMORA checkout.</p>
                         <p>Customer: ${order.name} | ORDER ID: #${order.id}</p>
                     </div>
@@ -1252,31 +1258,44 @@
 
             const template = document.getElementById('invoice-template');
             template.innerHTML = `
-                <div class="border-4 border-slate-900 p-8 bg-white w-full">
-                    <img src="IMG-20261030-WA0072.jpg" class="w-16 h-16 rounded-full border-2 border-amber-500 mb-2 object-cover">
-                    <h1 class="text-3xl font-black text-slate-900 mb-1">FAR<span class="text-amber-500">MORA</span></h1>
-                    <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-8">~ Frame Your Memories, Beautify Your Spaces ~</p>
-                    <div style="float: right; text-align: right; margin-top: -80px;">
-                        <h2 class="text-xl font-bold uppercase text-gray-800">INVOICE</h2>
-                        <p class="text-sm font-bold">ORDER ID: #${order.id}</p>
-                        <p class="text-xs text-gray-500">${order.date}</p>
+                <div style="background-color: #ffffff !important; color: #000000 !important; padding: 40px; font-family: sans-serif; border: 4px solid #0f172a; width: 100%;">
+                    <h1 style="font-size: 28px; font-weight: 900; color: #0f172a; margin-bottom: 2px;">FARMORA</h1>
+                    <p style="font-size: 11px; font-weight: bold; color: #d97706; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px;">~ Frame Your Memories, Beautify Your Spaces ~</p>
+                    <div style="float: right; text-align: right; margin-top: -75px;">
+                        <h2 style="font-size: 18px; font-weight: bold; color: #1f2937; text-transform: uppercase;">INVOICE</h2>
+                        <p style="font-size: 13px; font-weight: bold; color: #0f172a;">ORDER ID: #${order.id}</p>
+                        <p style="font-size: 11px; color: #4b5563;">${order.date}</p>
                     </div>
-                    <div class="mb-8 border-l-4 border-amber-500 pl-4">
-                        <p class="font-bold text-gray-800">Billed To:</p>
-                        <p class="text-sm font-semibold">${order.name}</p>
-                        <p class="text-sm">${order.phone}</p>
-                        <p class="text-sm">${order.address}</p>
+                    <div style="margin-bottom: 30px; border-left: 4px solid #d97706; padding-left: 12px; background-color: #fffbeb; padding-top: 8px; padding-bottom: 8px;">
+                        <p style="font-weight: bold; color: #1f2937; font-size: 13px;">Billed To:</p>
+                        <p style="font-size: 13px; font-weight: 600; color: #374151;">${order.name}</p>
+                        <p style="font-size: 12px; color: #4b5563;">${order.phone}</p>
+                        <p style="font-size: 12px; color: #4b5563;">${order.address}</p>
                     </div>
-                    <table class="w-full text-left border-collapse mb-8">
-                        <thead><tr class="bg-slate-100"><th class="p-2 border">Item</th><th class="p-2 border">Qty</th><th class="p-2 border">Price</th><th class="p-2 border">Total</th></tr></thead>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; text-align: left;">
+                        <thead>
+                            <tr style="background-color: #f3f4f6; color: #1f2937;">
+                                <th style="padding: 10px; border: 1px solid #d1d5db; font-size: 12px;">Item</th>
+                                <th style="padding: 10px; border: 1px solid #d1d5db; font-size: 12px;">Qty</th>
+                                <th style="padding: 10px; border: 1px solid #d1d5db; font-size: 12px;">Price</th>
+                                <th style="padding: 10px; border: 1px solid #d1d5db; font-size: 12px;">Total</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            ${order.items.map(i => `<tr><td class="p-2 border text-sm">${i.title} (${i.size})</td><td class="p-2 border text-sm">${i.quantity}</td><td class="p-2 border text-sm">₹${i.price}</td><td class="p-2 border text-sm">₹${i.price * i.quantity}</td></tr>`).join('')}
+                            ${order.items.map(i => `
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #d1d5db; font-size: 12px; color: #1f2937;">${i.title} (${i.size})</td>
+                                    <td style="padding: 10px; border: 1px solid #d1d5db; font-size: 12px; color: #1f2937;">${i.quantity}</td>
+                                    <td style="padding: 10px; border: 1px solid #d1d5db; font-size: 12px; color: #1f2937;">₹${i.price}</td>
+                                    <td style="padding: 10px; border: 1px solid #d1d5db; font-size: 12px; color: #1f2937;">₹${i.price * i.quantity}</td>
+                                </tr>
+                            `).join('')}
                         </tbody>
                     </table>
-                    <div class="flex justify-between items-center bg-gray-50 p-4 font-bold text-lg border">
-                        <span>Grand Total:</span><span class="text-emerald-600">₹${order.total}</span>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background-color: #f9fafb; padding: 15px; font-weight: bold; font-size: 16px; border: 1px solid #d1d5db;">
+                        <span>Grand Total:</span><span style="color: #059669;">₹${order.total}</span>
                     </div>
-                    <p class="text-center text-xs text-gray-400 mt-8">Thank you for choosing FARMORA!</p>
+                    <p style="text-align: center; font-size: 11px; color: #9ca3af; margin-top: 40px;">Thank you for choosing FARMORA! Handcrafted with care in Kashmir.</p>
                 </div>
             `;
             template.classList.remove('hidden');
